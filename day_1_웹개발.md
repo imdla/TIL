@@ -1,7 +1,5 @@
 ## <mark color="#fbc956">웹(WEB)</mark>
 
----
-
 - **월드 와이드 웹(World Wide Web, WWW, W3)**
   : 인터넷에 연결된 사용자들이 서로 정보 공유 가능한 공간
   - 인터넷에서 HTTP 프로토콜, 하이퍼텍스트, HTML 형식 등을 사용해 그림과 문자를 교환하는 전송 방식
@@ -33,9 +31,9 @@
 - **마크업 언어(Markup Language)**
   - 태그 등을 이용해 문서나 데이터 구조를 명기하는 언어
 
-## <mark color="#fbc956">인터넷 구성 요소</mark>
-
 ---
+
+## <mark color="#fbc956">인터넷 구성 요소</mark>
 
 - **인터넷 시스템(Internet System)**
   : 인터넷을 구성하고 있는 시스템
@@ -50,9 +48,9 @@
   - 인터넷 서비스 제공하는 프로그램 및 컴퓨터
   - HTML에서 사용할 데이터 보내줌
 
-## <mark color="#fbc956">인터넷 주소 체계</mark>
-
 ---
+
+## <mark color="#fbc956">인터넷 주소 체계</mark>
 
 ### 프로토콜(Protocol)
 
