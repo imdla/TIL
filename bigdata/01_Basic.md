@@ -2,7 +2,7 @@
 
 
 
-### 표현식**(Expression)**
+### 표현식(Expression)
 
 - **표현식(Expression)**
     - 파이썬에서 값을 만들어내는 코드
