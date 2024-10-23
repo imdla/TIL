@@ -7,6 +7,7 @@
 ### 1. String type으로 변환
 
 - **명시적 : `toString(value)`**
+
   ```jsx
   let age = 20;
 
@@ -17,7 +18,9 @@
   console.log(typeof true.toString(), true.toString()); // string true
   console.log(typeof Infinity.toString(), Infinity.toString()); // string Infinity
   ```
+
 - **암묵적**
+
   ```jsx
   let test = age + "";
   console.log(typeof test); // string
