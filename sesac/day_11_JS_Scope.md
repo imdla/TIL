@@ -36,6 +36,7 @@
 - 중괄호 `{}` 로 감싸진 영역
 - `let` 과 `const` 로 선언된 변수는 블록 스코프 가짐
 - 코드블록 `{…}` 안에서 선언한 변수는 블록 안에서만 사용 가능
+
   ```jsx
   {
     let sayHi = "안녕하세요";
@@ -45,7 +46,9 @@
 
   console.log(sayHi); // ReferenceError: sayHi is not defined
   ```
+
 - `if`, `for`, `while` 등에서도 `{…}`안에서 선언한 변수는 오직 블록 안에서만 접근 가능
+
   ```jsx
   if (true) {
     let sayHi = "안녕하세요";
@@ -65,6 +68,7 @@
 > ⇒ `let`, `const` 키워드를 사용할 때 블록레벨 스코프를 만들 수 있음
 
 - **`var` 키워드 사용할 경우**
+
   ```jsx
   var i = 0;
 
@@ -85,7 +89,9 @@
   */
   console.log(`i in global scope : ${i}`); // i in global scope : 10
   ```
+
 - **`let`, `const` 키워드 사용할 경우**
+
   ```jsx
   var i = 999;
 
@@ -126,6 +132,7 @@ console.log(name); // ReferenceError
 
 - 스코프가 중첩된 경우 내부 스코프에서 외부 스코프로 범위 넓혀가며 변수 검색하는 구조
 - 모든 선언은 가장 가까운 스코프에 있는 선언부터 활용
+
   ```jsx
   var number1 = 20;
 
@@ -135,7 +142,9 @@ console.log(name); // ReferenceError
 
   level1(); // 20
   ```
+
   - 함수 외부와 내부 둘 다 변수 선언이 있을 때
+
     ```jsx
     var number1 = 20;
     function level1() {
@@ -151,7 +160,9 @@ console.log(name); // ReferenceError
     // number1은 함수 밖에서 실행되어 함수 밖 number1 값 사용
     console.log(number1); // 20
     ```
+
   - 중첩된 함수에서 선언이 있을 때
+
     ```jsx
     var number1 = 20;
 
