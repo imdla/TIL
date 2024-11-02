@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "axios": "^1.7.7",
+    "json-server": "^0.17.4"
+  }
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>실습</title>
+    <style>
+      .font {
+        font-size: 3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 글씨를 "hello dom"으로 변경하시오 -->
+    <div id="text">Hello World!</div>
+
+    <!-- background-color를 red로, height, width를 100px로 변경하시오 -->
+    <div id="box">Hello World!</div>
+
+    <!-- 글씨 크기를 3rem으로 바꾸시오 -->
+    <div>글씨</div>
+
+    <!-- li태그들의 font 크기를 3rem으로 바꾸시오 -->
+    <ul>
+      <li class="list">hello</li>
+      <li class="list">world</li>
+      <li class="list">css</li>
+      <li class="list">javascript</li>
+    </ul>
+
+    <!-- script -->
+    <script>
+      const text = document.querySelector('#text');
+      text.textContent = 'hello dom';
+
+      const box = document.querySelector('#box');
+      box.style.backgroundColor = 'red';
+      box.style.width = '100px';
+      box.style.height = '100px';
+
+      const div = document.querySelector('div:nth-child(3)');
+      div.classList.add('font');
+
+      const list = document.querySelectorAll('.list');
+      list.forEach((li) => (li.style.fontSize = '3rem'));
+    </script>
+  </body>
+</html>

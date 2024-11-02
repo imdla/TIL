@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,macos,visualstudiocode,node,python,java,react
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,visualstudiocode,node,python,java,react
 
+apikey.js
+
 ### Java ###
 # Compiled class file
 *.class

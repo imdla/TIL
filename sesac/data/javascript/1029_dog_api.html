@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>실습2</title>
+    <style>
+      .font {
+        font-size: 3rem;
+      }
+
+      img {
+        width: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>dog</h1>
+    <img class="dog" src="" alt="강아지 사진" />
+
+    <h1>cat</h1>
+    <img class="cat" src="" alt="고양이 사진" />
+    <!-- 
+      다음 api를 참고하여 img태그에 강아지 사진을 넣어주세요.
+      https://dog.ceo/dog-api/ 
+    -->
+  </body>
+
+  <script>
+    // 강아지 사진 url 가져오기
+    async function getDogImgUrl() {
+      const url = 'https://dog.ceo/api/breeds/image/random';
+
+      const response = await fetch(url);
+      const data = await response.json();
+      const dogImgUrl = data.message;
+
+      return dogImgUrl;
+    }
+
+    // 고양이 사진 url 가져오기
+    async function getCatImgUrl() {
+      const url = 'https://api.thecatapi.com/v1/images/search';
+
+      const response = await fetch(url);
+      const data = await response.json();
+      const catImgUrl = data[0].url;
+
+      return catImgUrl;
+    }
+
+    async function main() {
+      const dogImgUrl = await getDogImgUrl();
+      const dogImgTag = document.querySelector('.dog');
+
+      dogImgTag.setAttribute('src', dogImgUrl);
+
+      const catImgUrl = await getCatImgUrl();
+      const catImgTag = document.querySelector('.cat');
+
+      catImgTag.setAttribute('src', catImgUrl);
+    }
+
+    main();
+  </script>
+</html>

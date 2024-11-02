@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dom Element</title>
+  </head>
+  <body>
+    <h1>querySelector()</h1>
+    <div class="container1">
+      <p id="first">첫 번째 문단</p>
+      <p class="second">두 번째 문단</p>
+    </div>
+
+    <h1>querySelectorAll()</h1>
+    <div class="container2">
+      <p id="first">첫 번째 문단</p>
+      <p class="second">두 번째 문단</p>
+    </div>
+
+    <h1>textContent</h1>
+    <div class="container3">
+      <h3>헤딩 3 첫번째</h3>
+      <h4>헤딩 4 두 번째</h4>
+    </div>
+
+    <h1>getAttribute(), setAttribute()</h1>
+    <div class="container4">
+      <a id="link" href="#">a 링크</a>
+      <p class="linkText"></p>
+      <p class="linkText2"></p>
+    </div>
+
+    <!-- script -->
+    <script>
+      const firstP = document.querySelector('#first');
+      const secondP = document.querySelector('.second');
+
+      firstP.style.backgroundColor = 'red';
+      secondP.style.backgroundColor = 'blue';
+
+      const allP = document.querySelectorAll('p');
+      allP.forEach((p) => (p.style.color = 'red'));
+
+      const heading = document.querySelector('h4');
+      heading.textContent = '내용은 textContent로 변경';
+
+      const link = document.querySelector('#link');
+      const linkText = document.querySelector('.linkText');
+      const linkText2 = document.querySelector('.linkText2');
+      linkText.textContent = link.href;
+      link.setAttribute('href', 'https://www.naver.com');
+      linkText2.textContent = linkText2.className;
+    </script>
+  </body>
+</html>

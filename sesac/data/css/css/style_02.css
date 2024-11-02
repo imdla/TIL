@@ -1,0 +1,94 @@
+section {
+  margin: 50px 0;
+  width: 500px;
+  background-color: #f0f0f0;
+  padding: 14px;
+}
+
+/* tim */
+#tim h2 {
+  font-style: italic;
+}
+
+#tim h3 {
+  color: green;
+}
+
+#tim p > span {
+  font-weight: bold;
+}
+
+#tim .red {
+  color: red;
+}
+
+#tim .pink {
+  color: pink;
+  text-decoration: underline;
+}
+
+#tim .yello {
+  color: orange;
+}
+
+/* cafe */
+#cafe {
+  text-align: center;
+}
+
+#cafe h2 {
+  color: brown;
+}
+
+#cafe div {
+  width: 100%;
+  border-top: 1px solid #888;
+  padding-top: 10px;
+  display: inline-flex;
+}
+
+#cafe ul {
+  width: 100%;
+  list-style-type: none;
+}
+
+#cafe ul.str {
+  font-style: italic;
+}
+
+#cafe ul li {
+  margin: 12px;
+}
+
+/* profile */
+#profile {
+  text-align: center;
+  padding: 10px;
+}
+
+#profile.img {
+  width: 100%;
+}
+
+#profile img {
+  width: 50%;
+  clip-path: circle(7rem at 8rem 8rem);
+}
+
+#profile .link div {
+  background-color: #888;
+  width: 50%;
+  padding: 12px;
+  margin: 10px auto;
+}
+
+#profile .link a {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#profile .link div:hover {
+  cursor: pointer;
+  background-color: #777;
+}

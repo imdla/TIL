@@ -1,0 +1,26 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+  color: #fff;
+  text-decoration: none;
+}
+
+nav {
+  background-color: #333;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav > .login > ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+nav > .login > ul > li {
+  margin-left: 16px;
+}

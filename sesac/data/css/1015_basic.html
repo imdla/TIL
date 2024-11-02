@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS</title>
+    <style>
+      .font {
+        color: lightslategray;
+        font-size: 24px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .box {
+        background-color: lightblue;
+        width: 200px;
+        height: 100px;
+      }
+
+      .box_2 {
+        background-color: lightcoral;
+        width: 50vw;
+        height: 20vh;
+      }
+
+      .box_img {
+        background-image: url(../html/dog.jpg);
+        background-repeat: repeat-x;
+        width: 70%;
+        height: 200px;
+      }
+
+      .box_grad {
+        background-image: linear-gradient(to right, lightcoral, lightblue);
+        width: 30vw;
+        height: 18vh;
+      }
+
+      .opa {
+        background-color: black;
+        color: white;
+        width: 300px;
+        height: 200px;
+        opacity: 0.7;
+      }
+
+      .cursor {
+        background-color: lightblue;
+        width: 70vw;
+        height: 20vh;
+        cursor: pointer;
+      }
+
+      .cursor_txt {
+        background-color: lightcoral;
+        width: 70vw;
+        height: 20vh;
+        cursor: text;
+      }
+
+      .vis {
+        background-color: lightslategray;
+        height: 200px;
+        visibility: collapse;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CSS 속성</h1>
+    <h2>텍스트 속성</h2>
+    <div class="font">1. 텍스트 속성 알아보기</div>
+    <div class="box">2. 배경색 지정하기</div>
+    <div class="box_2">3. 크기 뷰포트로 지정</div>
+    <div class="box_img">4. 배경을 이미지 지정</div>
+    <div class="box_grad">5. 배경을 그라디언트 지정</div>
+    <div class="opa">6. 투명도 알아보기</div>
+    <div class="cursor">7. 커서 지정 - 포인터</div>
+    <div class="cursor_txt">7-2. 커서 지정 - 텍스트</div>
+    <div class="vis">8. 요소의 가시성</div>
+  </body>
+</html>

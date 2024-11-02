@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form 실습</title>
+  </head>
+  <body>
+    <h1>숙소 예약</h1>
+    <form action="" method="">
+      <h2>신상 정보</h2>
+
+      <!-- name -->
+      <label for="name">이름 : </label>
+      <input type="text" id="name" name="name" placeholder="이름 입력" />
+      <br />
+
+      <!-- email -->
+      <label for="email">이메일 : </label>
+      <input type="email" id="email" name="email" placeholder="이메일 입력" />
+      <br />
+
+      <!-- file -->
+      <label for="photo">예약자 사진 : </label>
+      <input type="file" id="photo" name="photo" />
+      <br />
+
+      <hr />
+
+      <!-- checkbox -->
+      <h2>상세 정보</h2>
+      <h3>선호 객실 타입</h3>
+      <label for="city">도시뷰 : </label>
+      <input type="checkbox" id="city" name="type" value="city" />
+      <label for="lake">레이크뷰 : </label>
+      <input type="checkbox" id="lake" name="type" value="lake" />
+      <label for="mountine">마운틴뷰 : </label>
+      <input type="checkbox" id="mountine" name="type" value="mountine" />
+
+      <!-- number -->
+      <h3>동행자 정보</h3>
+      <label for="num">인원수 : </label>
+      <input type="number" name="num" id="num" min="1" max="10"/>
+
+      <!-- textarea -->
+      <h3>기타</h3>
+      <label for="etc">요청사항 : </label>
+      <textarea id="etc" name="etc" rows="10" cols="30"></textarea>
+      
+      <hr />
+
+      <!-- submit -->
+      <input type="submit" value="전송" />
+    </form>
+  </body>
+</html>

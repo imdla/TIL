@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>실습4</title>
+    <style>
+      #card {
+        width: 700px;
+        margin: 0px;
+        padding: 0px;
+        border: 1px dashed black;
+      }
+
+      /* header */
+      header {
+        background-color: green;
+      }
+
+      h1 {
+        margin: 0;
+        text-align: center;
+      }
+
+      /* main */
+      main {
+        padding: 20px;
+      }
+
+      /* imgBox */
+      img {
+        width: 100%;
+        display: block;
+      }
+
+      .imgBox div {
+        height: 70px;
+        margin: 0px;
+        padding: 10px;
+        background-color: green;
+        box-sizing: border-box;
+      }
+
+      .imgBox div h3 {
+        margin: 0px;
+        text-align: center;
+        color: white;
+      }
+
+      /* content */
+      .con h3 {
+        margin-top: 36px;
+        margin-bottom: 0px;
+        border-bottom: 1px solid #888;
+      }
+
+      .con p {
+        padding: 12px;
+        background-color: antiquewhite;
+      }
+
+      /* footer */
+      footer {
+        width: 100%;
+        height: 50px;
+        background-color: darkgreen;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="card">
+      <!-- header -->
+      <header>
+        <h1>오늘의 명소</h1>
+      </header>
+
+      <!-- main -->
+      <main>
+        <!-- imgBox -->
+        <section class="imgBox">
+          <img src="./assets/image.png" alt="제주도 성산 일출봉" />
+          <div>
+            <h3>제주도</h3>
+            <h3>성산 일출봉</h3>
+          </div>
+        </section>
+
+        <!-- content -->
+        <section class="con">
+          <h3>제주도 서귀포시 성산읍</h3>
+          <p>
+            성산일출봉은 제주도의 다른 오름들과는 달리 마그마가 물속에서
+            분출하면서 만들어진 수성화산체다. 화산활동시 분출된 뜨거운 마그마가
+            차가운 바닷물과 만나면서 화산재가 습기를 많이 머금어 끈끈한 성질을
+            띄게 되었고, 이것이 층을 이루면서 쌓인 것이 성산일출봉이다.
+          </p>
+        </section>
+      </main>
+
+      <!-- footer -->
+      <footer></footer>
+    </div>
+  </body>
+</html>

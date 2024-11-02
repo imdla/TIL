@@ -1,0 +1,50 @@
+section {
+  margin: 50px 0;
+  width: 500px;
+  background-color: #f0f0f0;
+  padding: 14px;
+}
+
+/* cafe */
+#cafe {
+  text-align: center;
+}
+
+#cafe h2 {
+  color: brown;
+}
+
+#cafe > article > div {
+  width: 100%;
+  border-top: 1px solid #888;
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#cafe ul {
+  width: 100%;
+  list-style-type: none;
+  padding: 0px;
+}
+
+#cafe ul.str {
+  font-style: italic;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+#cafe ul.price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+#cafe ul li {
+  margin: 12px;
+}

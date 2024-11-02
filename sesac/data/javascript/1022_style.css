@@ -1,0 +1,66 @@
+main {
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 3rem;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+form.todoBox {
+  margin-bottom: 2rem;
+}
+
+input[type='text'] {
+  width: 100%;
+  margin-right: 1rem;
+}
+
+input[type='button'] {
+  background-color: #c7c7c7;
+  border: #c7c7c7;
+  color: #fff;
+}
+
+form.checkBox {
+  flex-direction: column;
+}
+
+form.checkBox > label {
+  width: 100%;
+  padding: 14px;
+  border-bottom: 2px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+/* 체크박스 꾸미기 - 활성화 x */
+input[type='checkbox'] + label {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #bcbcbc;
+  cursor: pointer;
+}
+
+/* 체크박스 꾸미기 - 활성화 */
+input[type='checkbox']:checked + label {
+  background-color: aqua;
+  background-size: 100%;
+  border: 1px solid #fff;
+}
+
+/* input[type='checkbox'] {
+  position: absolute;
+  clip: rect(0 0 0 0);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+} */

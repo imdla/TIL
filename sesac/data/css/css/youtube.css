@@ -1,0 +1,78 @@
+/* common */
+* {
+  margin: 0px;
+  padding: 0px;
+
+  color: #333;
+  /* color: #fff;
+  background-color: #111; */
+  text-decoration: none;
+  list-style-type: none;
+  box-sizing: border-box;
+}
+
+img {
+  display: block;
+  max-width: 100px;
+}
+
+header {
+  background-color: lightcoral;
+}
+
+
+
+main {
+  background-color: lightblue;
+}
+
+/* youtube */
+#youtube {
+  display: flex;
+}
+
+/* nav */
+nav {
+  background-color: antiquewhite;
+  width: 240px;
+  box-sizing: border-box;
+}
+
+nav > .logo,
+nav > .menu-box > .menu {
+  padding: 1rem;
+}
+
+/* nav - logo */
+nav .icon {
+  width: 36px;
+}
+
+nav > .logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+nav > .logo img {
+  margin-right: 1rem;
+}
+
+
+#con {
+  width: 100%;
+}
+
+nav .menu-box {
+  border-bottom: 1px solid #888;
+}
+
+nav .menu li a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+nav .menu li a img {
+  padding-right: 1rem;
+}

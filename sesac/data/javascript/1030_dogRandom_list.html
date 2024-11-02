@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>실습2</title>
+    <style>
+      .font {
+        font-size: 3rem;
+      }
+
+      img {
+        width: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dog</h1>
+    <h2>Dog Name : <span id="dogName"></span></h2>
+    <img class="dog" src="" alt="강아지 사진" />
+  </body>
+
+  <script>
+    let dogName = document.querySelector('#dogName');
+
+    // 랜덤 수 가져오기
+    function getRandomInt(max) {
+      let randomNum = Math.floor(Math.random() * max);
+      return randomNum;
+    }
+
+    // 강아지 리스트의 품종 가져오기
+    async function getDogList() {
+      const url = 'https://dog.ceo/api/breeds/list/all';
+
+      const response = await fetch(url);
+      const data = await response.json();
+      const dogList = data.message;
+      const arrDogList = Object.keys(dogList);
+
+      return arrDogList;
+    }
+
+    // 강아지 사진 url 가져오기
+    async function getDogImgUrl(arrDogList) {
+      let randomNum = getRandomInt(100);
+      // let dogListOne = arrDogList[randomNum];
+      // const dogLstName = arrDogList[dogListOne];
+      let dogListOne = arrDogList[randomNum];
+      const dogLstName = arrDogList[dogListOne];
+      dogName.textContent = dogListOne;
+
+      let url = `https://dog.ceo/api/breed/${dogListOne}/images/random`;
+
+      if (dogLstName) {
+        let max = dogListOne.length;
+        let maxNum = getRandomInt(max);
+        dogListScd = dogListOne[maxNum];
+
+        url = `https://dog.ceo/api/breed/${dogListOne}/${dogListScd}/images/random`;
+        // console.log(url);
+      }
+
+      console.log(dogListOne);
+      // console.log(dogListScd);
+      console.log(dogLstName);
+
+      const response = await fetch(url);
+      const data = await response.json();
+      const dogImgUrl = data.message;
+
+      return dogImgUrl;
+    }
+
+    async function main() {
+      const arrDogList = await getDogList();
+      const dogImgUrl = await getDogImgUrl(arrDogList);
+      const dogImgTag = document.querySelector('.dog');
+
+      dogImgTag.setAttribute('src', dogImgUrl);
+    }
+
+    main();
+  </script>
+</html>
