@@ -8,6 +8,7 @@
 }
 
 .completed {
+  opacity: 0.5;
   text-decoration: line-through;
 }
 
@@ -54,8 +55,4 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.completed {
-  opacity: 0.5;
 }

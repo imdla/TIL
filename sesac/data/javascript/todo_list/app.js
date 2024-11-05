@@ -6,92 +6,101 @@ const URL = 'http://localhost:3000/todos';
 document.addEventListener('DOMContentLoaded', initTodos);
 
 async function initTodos() {
-  let getTodos = await readTodos();
+  try {
+    let todos = await getTodos();
 
-  for (let getTodo of getTodos) {
-    makeTodoList(getTodo);
+    for (let todo of todos) {
+      makeTodoItem(todo);
+    }
+  } catch (error) {
+    alert('todo 조회 오류입니다.');
   }
+
+  addTodoItem();
 }
 
 // todo list 추가
-function addTodoList() {
-  const addTodo = document.querySelector('#add-todo');
+function addTodoItem() {
+  const addTodoBtn = document.querySelector('#add-todo');
   const todoInput = document.querySelector('#todo-input');
 
-  addTodo.addEventListener('click', async () => {
+  addTodoBtn.addEventListener('click', async () => {
     // todo 생성 (POST)
-    await createTodo();
-
-    // todo POST한 todo data 가져오기
-    let getTodos = await readTodos();
-    let id = getTodos.length;
-    let getTodo = await readTodos(id);
+    let todo = await createTodo(todoInput);
 
     // todo data를 리스트로 만들기
-    makeTodoList(getTodo);
+    makeTodoItem(todo);
 
     todoInput.value = '';
   });
 }
 
 // todo data를 list로 만들기 + 완료/삭제 버튼 클릭 이벤트
-function makeTodoList(getTodo) {
+function makeTodoItem(todo) {
   const todoList = document.querySelector('#todo-list');
-  const inputContent = getTodo.content;
+  const { id, content, completed } = todo;
 
   const liTag = document.createElement('li');
 
-  const content = document.createElement('p');
-  content.textContent = inputContent;
+  const pTag = document.createElement('p');
+  pTag.textContent = content;
 
   // 완료 버튼 생성 및 버튼 클릭 이벤트
   const completedBtn = document.createElement('button');
   completedBtn.classList.add('btn', 'btn-primary', 'completeBtn');
   completedBtn.textContent = '완료';
 
-  completedBtn.addEventListener('click', (event) =>
-    completeBtnFunc(event, content, getTodo)
-  );
+  completedBtn.addEventListener('click', (event) => {
+    completeBtnClick(event, pTag, todo);
+  });
 
   // 삭제 버튼 생성 및 버튼 클릭 이벤트
   const deleteBtn = document.createElement('button');
   deleteBtn.classList.add('btn', 'btn-danger', 'deleteBtn');
   deleteBtn.textContent = '삭제';
 
-  deleteBtn.addEventListener('click', (event) => {
-    event.target.parentElement.remove();
-    deleteBtnFunc(getTodo.id);
+  deleteBtn.addEventListener('click', async (event) => {
+    try {
+      await deleteBtnClick(id);
+
+      event.target.parentElement.remove();
+    } catch (error) {
+      alert('삭제 버튼 오류입니다.');
+    }
   });
 
-  liTag.append(content, completedBtn, deleteBtn);
+  liTag.append(pTag, completedBtn, deleteBtn);
   todoList.append(liTag);
 
   // 첫 페이지 로딩 시 completed 확인 -> 버튼 스타일 설정
-  if (getTodo.completed) {
-    content.classList.add('completed');
+  if (completed) {
+    pTag.classList.add('completed');
     completedBtn.classList.add('completed');
   }
 }
 
 // 완료 버튼 작동
-async function completeBtnFunc(event, content, getTodo) {
-  let completedVal = !getTodo.completed;
-  let id = getTodo.id;
+async function completeBtnClick(event, pTag, todo) {
+  let completedVal = !todo.completed;
+  let id = todo.id;
 
-  if (!event.target.classList.contains('completed')) {
-    event.target.classList.add('completed');
-    content.classList.add('completed');
-    content.style.textDecoration = 'line-through';
-  } else {
-    event.target.classList.remove('completed');
-    content.classList.remove('completed');
-    content.style.textDecoration = 'none';
+  try {
+    await updateTodo(id, completedVal);
+
+    if (!completedVal) {
+      event.target.classList.add('completed');
+      pTag.classList.add('completed');
+    } else {
+      event.target.classList.remove('completed');
+      pTag.classList.remove('completed');
+    }
+  } catch (error) {
+    alert('완료 버튼 오류입니다.');
   }
-  await updateTodo(id, completedVal);
 }
 
 // 삭제 버튼 작동 (DELETE)
-async function deleteBtnFunc(id) {
+async function deleteBtnClick(id) {
   const response = await fetch(`${URL}/${id}`, {
     method: 'DELETE',
   });
@@ -102,7 +111,7 @@ async function deleteBtnFunc(id) {
 
 // todo 수정 (PATCH)
 async function updateTodo(id, completedVal) {
-  let todo = {
+  let modifyTodo = {
     completed: completedVal,
   };
 
@@ -111,38 +120,39 @@ async function updateTodo(id, completedVal) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(todo),
+    body: JSON.stringify(modifyTodo),
   });
   const updatedTodo = await response.json();
   return updatedTodo;
 }
 
 // todos 가져오기 (GET)
-async function readTodos(id = null) {
-  let path = `/${id}`;
-  const url = id === null ? `${URL}` : `${URL}${path}`;
-  const response = await fetch(url);
+async function getTodos() {
+  const response = await fetch(URL);
   const todos = await response.json();
   return todos;
 }
 
 // todo 생성 (POST, data 보내기)
-async function createTodo() {
-  const todoInputVal = document.querySelector('#todo-input').value;
+async function createTodo(todoInput) {
+  const todoInputVal = todoInput.value;
+
   let newTodo = {
     content: todoInputVal,
     completed: false,
   };
 
-  const response = await fetch(`${URL}`, {
-    method: 'POST',
-    body: JSON.stringify(newTodo),
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    },
-  });
-  const todo = await response.json();
-  return todo;
+  try {
+    const response = await fetch(`${URL}`, {
+      method: 'POST',
+      body: JSON.stringify(newTodo),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    });
+    const todo = await response.json();
+    return todo;
+  } catch (error) {
+    alert('todo 생성 오류입니다.');
+  }
 }
-
-addTodoList();
