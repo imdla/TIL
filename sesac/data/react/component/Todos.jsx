@@ -1,0 +1,19 @@
+import React from 'react'
+
+export default function Todos() {
+  return (
+    <>
+      <h1>Hedy's Lamarr's Todos</h1>
+      <img 
+        src="https://i.imgur.com/yXOvdOSs.jpg"
+        alt="Hedy Lamarr"
+        className="photo" 
+      />
+      <ul>
+        <li>Invent new traffic lights</li>
+        <li>Rehearse a movie scene</li>
+        <li>Improve the spectrum technology</li>
+      </ul>
+    </>
+  )
+}
