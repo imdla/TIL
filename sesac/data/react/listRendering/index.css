@@ -1,0 +1,222 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+img {
+  width: 100px;
+  height: 100px;
+}
+
+h1 {
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  margin: 1rem;
+}
+
+.card {
+  width: 50%;
+  flex-direction: column;
+  margin: 1rem auto;
+}
+
+.menuBox {
+  border-top: 1px solid #555;
+  padding: 2rem;
+}
+
+.menuItem {
+  justify-content: space-between;
+}
+
+/* shop */
+/* shop - header */
+.mySite {
+  box-sizing: border-box;
+  background-color: #333;
+}
+
+.mySite a {
+  color: white;
+}
+
+.mySite li {
+  list-style: none;
+}
+
+.mySite > header {
+  flex-direction: column;
+}
+
+.mySite > header > nav.flex {
+  width: 100%;
+  padding: 0 2rem;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.mySite > header > nav h1 {
+  font-size: 18px;
+}
+
+.mySite > header > nav .menu li {
+  margin-left: 16px;
+}
+
+.mySite > header > img {
+  width: 100%;
+  height: auto;
+}
+
+/* shop - main */
+.mySite > main {
+  width: 100%;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.mySite > main > section {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.mySite > main > section > div {
+  width: 100%;
+}
+
+/* shop - about - contact */
+.mySite > main > section > div.about > img,
+.mySite > main > section > div.about > div {
+  width: 50%;
+}
+
+.mySite > main > section > div.about > img {
+  height: auto;
+  height: auto;
+}
+
+.mySite > main > section > div.about > div p {
+  height: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 1rem;
+}
+
+/* shop - main - contact */
+
+.mySite > main > section > div.contact img,
+.mySite > main > section > div.contact form {
+  width: 50%;
+  height: auto;
+}
+
+.mySite > main > section > div.contact form {
+  flex-direction: column;
+  padding: 1rem;
+  border: 1px solid #888;
+  margin-right: 1rem;
+}
+
+.mySite > main > section > div.contact form input {
+  width: 100%;
+  height: 24px;
+}
+
+.mySite > main > section > div.contact form button {
+  background-color: #888;
+  margin: 8px auto;
+}
+
+/* shop - main - More */
+.mySite > main > section > div.more ul {
+  justify-content: space-between;
+  text-align: center;
+}
+
+.mySite > main > section > div.more img {
+  width: 48px;
+  height: auto;
+}
+
+/* shop - footer */
+.mySite > footer {
+  text-align: center;
+  padding: 1rem;
+  border-top: 1px solid #888;
+}
