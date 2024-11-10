@@ -1,4 +1,4 @@
-## <mark color="#fbc956">\*State and Lifecycle (상태와 생명주기)></mark>
+## <mark color="#fbc956">State and Lifecycle (상태와 생명주기)</mark>
 
 ```jsx
 const root = React.DOM.creatRoot(document.getElementById("root"));
