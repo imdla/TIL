@@ -27,7 +27,7 @@
 > - App.jsx
 > - RootLayout.jsx
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/a464571f-fb95-4542-b84a-9fb853160a80/766ba9f5-bdfc-4df8-8c91-dbb93e01fc12/image.png)
+![image.png](./assets/router.png)
 
 1. `App` 에서 **`RouterProvider`** 통해 **하나의 페이지에서 상황에 따라 여러 Component** 보여줌
 
