@@ -7,7 +7,8 @@ export default function GoodBtn() {
   return (
     <div>
       <Button
-        backgroundColor={isGood ? "blue" : "gray"}
+        // backgroundColor={isGood ? "blue" : "gray"}
+        className={`${isGood ? "blue" : "gray"}`}
         onClick={() => setIsGood((prev) => !prev)}
       >
         {isGood ? "좋아요" : "좋아요 취소"}
