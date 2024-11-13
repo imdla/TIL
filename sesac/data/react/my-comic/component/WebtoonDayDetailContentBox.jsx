@@ -32,6 +32,7 @@ export default function WebtoonDayDetailContentBox({ webtoontypeTitle }) {
 
   const webtoonDayContentList = webtoonDayContents.map((webtoonDayContent) => {
     const { id, webtoonName, author } = webtoonDayContent;
+
     return (
       <WebtoonDayDetailContentBoxList
         id={id}
