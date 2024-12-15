@@ -14,10 +14,9 @@ public class Main {
 
         // BankAccount
         System.out.println("BankAccount -------------------------------------------------");
-        BankAccount ba = new BankAccount();
-        ba.setPassword("1111");
+        BankAccount ba = new BankAccount(1111);
         ba.deposit(5000);
-        ba.withdrawal(3000, "111");
-        ba.showBalance("1111");
+        ba.withdrawal(3000, 1111);
+        ba.showBalance(1111);
     }
 }

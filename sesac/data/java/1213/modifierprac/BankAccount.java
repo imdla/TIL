@@ -2,7 +2,16 @@ package org.example.modifierprac;
 
 public class BankAccount {
     private int balance = 0;
-    private String password;
+    private int password;
+
+    BankAccount(int password) {
+        String strPassword = String.valueOf(password);
+        if(strPassword.length() == 4) {
+            this.password = password;
+        } else {
+            System.out.println("Password is 4 digits !");
+        }
+    }
 
     public int getBalance() {
         return balance;
@@ -16,68 +25,55 @@ public class BankAccount {
         this.balance -= money;
     }
 
-    public String getPassword() {
+    public int getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        if (password.length() == 4) {
-            this.password = password;
-        } else {
-            System.out.println("password is 4 digits !");
-        }
     }
 
     // 입금
     public void deposit(int money) {
         if (money > 0) {
             setBalanceAdd(money);
-            System.out.println("balance " + getBalance());
+            System.out.println("Current balance: " + getBalance());
         } else {
             System.out.println("money is under 0 !");
         }
     }
 
     // 출금
-    public void withdrawal(int money, String password) {
+    public void withdrawal(int money, int password) {
+        String strPassword = String.valueOf(password);
+        int userPassword = getPassword();
         boolean flag = true;
-        if (money > this.balance) {
+
+        if (strPassword.length() != 4 || userPassword != password) {
             flag = false;
+            System.out.println("Wrong password !");
         }
 
-        if (flag && password.length() == 4) {
-            String userPw = getPassword();
-            if (!password.equals(userPw)) {
-                flag = false;
-            }
-        } else {
+        if (flag && money > this.balance) {
             flag = false;
+            System.out.println("withdrawal amount is so large !");
         }
 
         if (flag) {
             setBalanceMinus(money);
-            System.out.println("balance " + getBalance());
-        } else {
-            System.out.println("long password !");
+            System.out.println("Current balance: " + getBalance());
         }
     }
 
     // 잔액 조회
-    public void showBalance(String password) {
+    public void showBalance(int password) {
+        String strPassword = String.valueOf(password);
+        int userPassword = getPassword();
         boolean flag = true;
-        if (password.length() == 4) {
-            String userPw = getPassword();
-            if (password.equals(userPw)) {
-                flag = false;
-            }
-        } else {
+
+        if (strPassword.length() != 4 || userPassword != password) {
             flag = false;
+            System.out.println("Wrong password !");
         }
 
         if (flag) {
-            System.out.println("balance " + getBalance());
-        } else {
-            System.out.println("long password !");
+            System.out.println("Current balance: " + getBalance());
         }
     }
 }
