@@ -18,5 +18,10 @@ public class Main {
         ba.deposit(5000);
         ba.withdrawal(3000, 1111);
         ba.showBalance(1111);
+
+        int myPassword = 12345;
+        if (BankAccount.initialValidation(myPassword)) {
+            new BankAccount(myPassword);
+        }
     }
 }

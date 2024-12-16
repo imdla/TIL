@@ -28,7 +28,7 @@ public class BankAccount {
     public void withdrawal(int money, int password) {
         boolean flag = true;
 
-        if (!validatePassword(password)) {
+        if (validatePassword(password)) {
             flag = false;
             System.out.println("Wrong password !");
         }
@@ -48,7 +48,7 @@ public class BankAccount {
     public void showBalance(int password) {
         boolean flag = true;
 
-        if (!validatePassword(password)) {
+        if (validatePassword(password)) {
             flag = false;
             System.out.println("Wrong password !");
         }
@@ -66,6 +66,17 @@ public class BankAccount {
     // 비밀번호 확인
     private boolean validatePassword(int password) {
         String strPassword = String.valueOf(password);
-        return (strPassword.length() == 4 && this.password == password);
+        return (strPassword.length() != 4 || this.password != password);
+    }
+
+    // 계좌 생성 시 비밀번호 확인
+    public static boolean initialValidation(int password) {
+        String strPassword = String.valueOf(password);
+        if (strPassword.length() == 4) {
+            return true;
+        } else {
+            System.out.println("Wrong Password validation !");
+            return false;
+        }
     }
 }
