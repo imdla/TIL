@@ -1,73 +1,72 @@
-package org.example.inheritanceprac;
+package org.example.interfaceprac;
 
-public class Truck extends Vehicle{
-    private int bagage = 0;
-    protected static final int MAX_FUEL = 250;
+public class Truck extends Vehicle implements LoadOnOff {
+    private int bagage;
+    private int maxBagage;
 
-    public Truck(String model) {
-        super(model);
+    public Truck(String modelName) {
+        super(modelName);
+        maxFuel = 250;
+        bagage = 0;
+        maxBagage = 30;
     }
 
-    // 최대 보관 짐 수 : 30
-    // 짐 추가하기
-    public void addBagage(int bagage) {
-        if (validateBagage(bagage)) {
-            this.bagage += bagage;
-        }
-
-        if (this.bagage <= 30) {
-            System.out.println("Current bagage: " + this.bagage);
-        } else {
-            System.out.println("We max bagage are 30 !");
-            this.bagage = 30;
-            System.out.println("Current bagage: " + this.bagage);
-        }
-    }
-
-    // 짐 빼기
-    public void minusBagage(int bagage) {
+    // 짐 올리기
+    @Override
+    public void loadOn(int num) {
         boolean flag = true;
-        if (!validateBagage(bagage)) {
+        if (!validateValue(num)) {
             flag = false;
+            System.out.println("Bagages are under 0 !");
+        } else {
+            bagage += num;
         }
-
-        if (this.bagage < bagage) {
-            System.out.println("get off bagage so many !");
-            flag = false;
+        if (flag && !validateLoadOnOff(bagage)) {
+            bagage = maxBagage;
+            System.out.println("Max bagage !");
         }
-
-        if (flag){
-            this.bagage -= bagage;
-            System.out.println("Current bagage: " + this.bagage);
-        }
+        System.out.println("Current bagage: " + bagage);
     }
 
-    // 연료 채우기
-//    @Override
-//    public void addFuel(int fuel) {
-//        if (validateFuel(fuel)) {
-//            this.fuel += fuel;
-//        }
-//
-//        if (this.fuel > MAX_FUEL) {
-//            this.fuel = MAX_FUEL;
-//        }
-//
-//        System.out.println("Current fuel: " + this.fuel);
-//    }
+    // 짐 내리기
+    @Override
+    public void loadOff(int num) {
+        boolean flag = true;
+        if (!validateValue(num)) {
+            flag = false;
+            System.out.println("Bagages are under 0 !");
+        } else if (num > bagage) {
+            flag = false;
+            System.out.println("Get off bagages so many !");
+        } else {
+            bagage -= num;
+        }
 
-    // 짐 수 확인
-    public boolean validateBagage(int bagage) {
-        if (bagage <= 0) {
-            System.out.println("bagage is under 0 !");
+        if (flag && !validateLoadOnOff(bagage)) {
+            bagage = 0;
+            System.out.println("Bagages are under 0 !");
+        }
+        System.out.println("Current bagage: " + bagage);
+    }
+
+    // 짐 확인
+    @Override
+    public boolean validateLoadOnOff(int num) {
+        if (num < 0 || num > maxBagage) {
             return false;
         } else {
             return true;
         }
     }
 
+    // 입력값 확인
     @Override
-    public int getMaxFuel() {
-        return MAX_FUEL;
+    public boolean validateValue(int num) {
+        if (num < 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
+
 }

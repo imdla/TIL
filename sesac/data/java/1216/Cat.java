@@ -1,16 +1,18 @@
-package org.example.inheritanceprac;
+package org.example.interfaceprac;
 
-public class Cat extends Animal {
+public class Cat extends Animal implements Grrable {
+
     public Cat(String name, int age) {
         super(name, age);
     }
 
     @Override
     public void makeSound() {
-        System.out.println("make a Sound : Cat");
+        System.out.println("mew");
     }
 
-    public void boneless() {
-        System.out.println("make a boneless : Cat");
+    @Override
+    public void grr() {
+        System.out.println("Grr");
     }
 }
