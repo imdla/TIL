@@ -80,6 +80,7 @@ public class Main {
         System.out.println("Character------------------------");
         Character character = new Character("character");
         character.levelUp();
+        character.attack();
 
         System.out.println();
         System.out.println("Warrior------------------------");
@@ -92,6 +93,10 @@ public class Main {
         warrior.levelUp();
         warrior.levelUp();
 
+        warrior.attack();
+        warrior.attack();
+        warrior.attack();
+
         System.out.println();
         System.out.println("Mage------------------------");
         Mage mage = new Mage("mage");
@@ -103,7 +108,5 @@ public class Main {
         mage.levelUp();
 
         System.out.println();
-        mage.attackTo(warrior);
-        warrior.attackTo(mage);
     }
 }
