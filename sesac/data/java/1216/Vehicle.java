@@ -1,51 +1,55 @@
-package org.example.interfaceprac;
+package org.example.inheritanceprac;
 
-public abstract class Vehicle {
-    protected String modelName;
-    protected int speed;
-    protected int fuel;
-    protected static int maxFuel;
+public class Vehicle {
+    private String model;
+    private int speed = 0;
+    protected int fuel = 0;
+    protected static final int MAX_FUEL = 100;
 
-    public Vehicle(String modelName) {
-        this.modelName = modelName;
-        this.speed = 0;
-        this.fuel = 100;
-        maxFuel = 100;
+    public Vehicle(String model) {
+        this.model = model;
     }
 
-    // 속도 증가
     public void speedUp() {
-        if (validateFuel()) {
+        if (fuel > 10) {
             speed += 10;
             fuel -= 10;
-        }
-        System.out.println("Current speed: " + speed);
-        System.out.println("Current fuel: " + fuel);
-    }
-
-    // 속도 하락
-    public void speedDown() {
-        if (validateSpeed()) {
-            speed -= 10;
-        }
-        System.out.println("Current speed: " + speed);
-    }
-
-    // 속도 확인
-    private boolean validateSpeed() {
-        if (speed < 0) {
-            return false;
+            System.out.println("Current speed: " + speed + ", Current fuel: " + fuel);
         } else {
-            return true;
+            System.out.println("fuel is so few ! ");
         }
+    }
+
+    public void speedDown() {
+        speed -= 10;
+        System.out.println("Current speed: " + speed);
+    }
+
+    // 연료 채우기
+    public void addFuel(int fuel) {
+        if (validateFuel(fuel)) {
+            this.fuel += fuel;
+        }
+
+        if (this.fuel > getMaxFuel()) {
+            this.fuel = getMaxFuel();
+        }
+
+        System.out.println("Current fuel: " + this.fuel);
     }
 
     // 연료 확인
-    private boolean validateFuel() {
-        if (fuel < 0) {
+    public boolean validateFuel(int fuel) {
+        if (fuel <= 0) {
+            System.out.println("Fuel is under 0 !");
             return false;
         } else {
             return true;
         }
     }
+
+    public int getMaxFuel() {
+        return MAX_FUEL;
+    }
+
 }

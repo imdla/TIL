@@ -1,72 +1,74 @@
-package org.example.interfaceprac;
+package org.example.inheritanceprac;
 
-public class Bus extends Vehicle implements GetOnOff {
-    private int passenger;
-    private int maxPassenger;
+public class Bus extends Vehicle {
+    private int passenger = 0;
+    protected static final int MAX_FUEL = 300;
 
-    public Bus(String modelName) {
-        super(modelName);
-        maxFuel = 300;
-        passenger = 0;
-        maxPassenger = 20;
+    public Bus(String model) {
+        super(model);
     }
 
-    // 승객 승차
-    @Override
-    public void getOn(int num) {
-        boolean flag = true;
-        if (!validateNum(num)) {
-            flag = false;
-            System.out.println("Passengers are under 0 !");
+    // 최대 탑승 인원 수 : 20
+    // 승객 탑승
+    public void boardingPassenger(int passenger) {
+        if (validatePassenger(passenger)) {
+            this.passenger += passenger;
+        }
+
+        if (this.passenger <= 20) {
+            System.out.println("Current passenger: " + this.passenger);
         } else {
-            passenger += num;
+            System.out.println("We max boarding is 20 !");
+            this.passenger = 20;
+            System.out.println("Current passenger: " + this.passenger);
         }
-        if (flag && !validateGetOnOff(passenger)) {
-            passenger = maxPassenger;
-            System.out.println("Max passenger !");
-        }
-        System.out.println("Current passenger: " + passenger);
     }
 
     // 승객 하차
-    @Override
-    public void getOff(int num) {
+    public void quitPassenger(int passenger) {
         boolean flag = true;
-        if (!validateNum(num)) {
+        if (!validatePassenger(passenger)) {
             flag = false;
-            System.out.println("Passengers are under 0 !");
-        } else if (num > passenger) {
-            flag = false;
-            System.out.println("Get off passengers so many !");
-        } else {
-            passenger -= num;
         }
 
-        if (flag && !validateGetOnOff(passenger)) {
-            passenger = 0;
-            System.out.println("Passengers are under 0 !");
+        if (this.passenger < passenger) {
+            System.out.println("get off passenger so many !");
+            flag = false;
         }
-        System.out.println("Current passenger: " + passenger);
+
+        if (flag){
+            this.passenger -= passenger;
+            System.out.println("Current passenger: " + this.passenger);
+        }
     }
 
-    // 승객 확인
-    @Override
-    public boolean validateGetOnOff(int num) {
-        if (num < 0 || num > maxPassenger) {
+    // 연료 채우기
+//    @Override
+//    public void addFuel(int fuel) {
+//        if (validateFuel(fuel)) {
+//            this.fuel += fuel;
+//        }
+//
+//        if (this.fuel > MAX_FUEL) {
+//            this.fuel = MAX_FUEL;
+//        }
+//
+//        System.out.println("Current fuel: " + this.fuel);
+//    }
+
+    // 고객 수 확인
+    public boolean validatePassenger(int passenger) {
+        if (passenger <= 0) {
+            System.out.println("passenger is under 0 !");
             return false;
         } else {
             return true;
         }
     }
 
-    // 입력값 확인
     @Override
-    public boolean validateNum(int num) {
-        if (num < 0) {
-            return false;
-        } else {
-            return true;
-        }
+    public int getMaxFuel() {
+        return MAX_FUEL;
     }
 
 }
