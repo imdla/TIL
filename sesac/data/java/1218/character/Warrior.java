@@ -1,6 +1,6 @@
 package org.example.interfaceprac.character;
 
-public class Warrior extends Character implements RageUsable {
+public class Warrior extends Character implements RageUsable, DamageTakable {
    protected int rage;
    protected int maxRage;
 
@@ -22,12 +22,25 @@ public class Warrior extends Character implements RageUsable {
         }
     }
 
+    // 공격 (매개변수 있음)
+//    @Override
+//    public void attack(Character target) {
+//        // target은 Character 타입으로 Character 메서드만 사용 가능
+//        System.out.println("Attack " + target);
+//        target.takeDamage(20);
+//    }
+
     @Override
-    public void attack(Character target) {
-        // target은 Character 타입으로 Character 메서드만 사용 가능
+    public void attack(DamageTakable target) {
         System.out.println("Attack " + target);
         target.takeDamage(20);
     }
+
+//    // 데미지 받음
+//    @Override
+//    public void takeDamage(int amount) {
+//        health -= amount;
+//    }
 
     @Override
     public void takeDamage(int amount) {
@@ -38,6 +51,7 @@ public class Warrior extends Character implements RageUsable {
     @Override
     public void levelUp() {
         level += 1;
+        health += 30;
         System.out.println("Level Up");
     }
 
@@ -67,4 +81,5 @@ public class Warrior extends Character implements RageUsable {
         super.showInfo();
         System.out.println("rage : " + rage);
     }
+
 }
