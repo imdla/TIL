@@ -22,6 +22,18 @@ public class Warrior extends Character implements RageUsable {
         }
     }
 
+    @Override
+    public void attack(Character target) {
+        // target은 Character 타입으로 Character 메서드만 사용 가능
+        System.out.println("Attack " + target);
+        target.takeDamage(20);
+    }
+
+    @Override
+    public void takeDamage(int amount) {
+        health -= amount;
+    }
+
     // 레벨업 기능
     @Override
     public void levelUp() {

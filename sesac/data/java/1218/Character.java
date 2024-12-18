@@ -13,6 +13,10 @@ public abstract class Character {
 
     public abstract void attack();
 
+    public abstract void attack(Character target);
+
+    public abstract void takeDamage(int amount);
+
     public abstract void levelUp();
 
     public void showInfo() {

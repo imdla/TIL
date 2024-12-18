@@ -8,5 +8,15 @@ public class Main {
         warrior.attack();
         warrior.increaseRage(100);
         warrior.attack();
+
+        Mage mage = new Mage("mage");
+        mage.showInfo();
+        warrior.showInfo();
+
+        Warrior warrior2 = new Warrior("warrior2");
+
+        warrior.attack(warrior2);
+        warrior.attack(mage);
+        mage.showInfo();
     }
 }
