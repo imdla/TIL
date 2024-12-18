@@ -3,9 +3,13 @@ package org.example.interfaceprac.compositionprac;
 public class Main {
     public static void main(String[] args) {
         // Pencil & Person
-        Pencil pencil = new Pencil("red");
-        Person person = new Person(pencil);
-        person.writePen();
+        Pencil red = new Pencil("red");
+        Person person = new Person("person", red);
+        person.write();
+
+        Pencil blue = new Pencil("blue");
+        person.setPencil(blue);
+        person.write();
 
         // Engine
         Engine engine = new Engine(5);

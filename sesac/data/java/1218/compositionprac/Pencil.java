@@ -8,6 +8,6 @@ public class Pencil {
     }
 
     public void write() {
-        System.out.println("pencil write " + color + " color");
+        System.out.println("Write with " + color + " color");
     }
 }
