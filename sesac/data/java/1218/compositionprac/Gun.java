@@ -1,9 +1,12 @@
 package org.example.interfaceprac.compositionprac;
 
-public class Gun extends Weapon implements SpecialAttackable {
+public class Gun extends Weapon {
+    protected int attackPower;
+    protected int stamina;
 
-    public Gun(int attackPower, int stamina) {
-        super(attackPower, stamina);
+    public Gun() {
+        this.attackPower = 150;
+        this.stamina = 150;
     }
 
     @Override

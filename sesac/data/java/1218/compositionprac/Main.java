@@ -1,5 +1,7 @@
 package org.example.interfaceprac.compositionprac;
 
+import javax.print.attribute.standard.PrinterName;
+
 public class Main {
     public static void main(String[] args) {
         // Pencil & Person
@@ -11,12 +13,24 @@ public class Main {
         person.setPencil(blue);
         person.write();
 
+        Pencil yellow = new Pencil("yellow");
+//        Pencil[] pencils = {red, blue, yellow};
+        Person gom = new Person("gom", new Pencil[]{red, blue, yellow});
+        gom.writeMany();
+
         // Engine
         Engine engine = new Engine(5);
         Car car = new Car("car", engine);
         car.accel();
 
         // Weapon & Character
-//        Character character = new Character("character");
+        Gun gun = new Gun();
+        Sword sword = new Sword();
+        Character c1 = new Character();
+        Character c2 = new Character(gun);
+        Character c3 = new Character(sword);
+        c1.attack();
+        c2.attack();
+        c3.attack();
     }
 }
