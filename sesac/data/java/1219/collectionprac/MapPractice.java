@@ -34,5 +34,8 @@ public class MapPractice {
             System.out.println(string + value);
         }
 
+        map.keySet();
+        map.values();
+
     }
 }
