@@ -212,6 +212,26 @@ public class Object {
 }
 ```
 
+- 자식 클래스에서 재정의해 원하는 형식으로 출력할 경우
+  ```java
+  public class Person {
+  	private String name;
+  	private int age;
+
+  	public Person(String name, int age) {
+  		this.name = name;
+  		this.age = age;
+  	}
+
+  	@Override
+  	public String toString() {
+  		return "Name: " + this.name + ", Age: " + this.age;
+  	}
+  }
+  ```
+  - `System.out.println()` 은 내부적으로 인자로 넣은 객체의 `toString()` 값 출력함
+  - 재정의하지 않을 경우 `클래스이름 + 16진수 해시코드 값` 이 출력됨
+
 ### 3. `equals(Object obj)`
 
 - 객체 자신과 obj가 동등한 객체인지 비교하는 메서드
@@ -227,6 +247,47 @@ public class Object {
 	...
 }
 ```
+
+- 자식 클래스에서 재정의해 원하는 형식으로 비교할 경우
+  ```java
+  public class Person {
+  	private String name;
+  	private int age;
+
+  	public Person(String name, int age) {
+  		this.name = name;
+  		this.age = age;
+  	}
+
+  	@Override
+  	public boolean equals(Object obj) {
+  		if (obj == null || getClass() != obj.getClass()) {
+  			return false;
+  		}
+
+  		Person other = (Person) obj;
+  		return this.name.equals(other.name) && this.age == other.age;
+  	}
+  }
+  ```
+  - obj가 비교 가능 유효한 개체인지 검사 수행
+  - obj는 Object 타입으로 내부 변수의 값 비교위해 Person 타입 형 변환함
+- Java의 문자열(String)도 리터럴 값 통해 비교할 수 있도록 equals() 재정의
+  ```java
+  public final class String
+  	implements java.io.Serializable, Comparable<String>, CharSequence, Constable, ConstantDesc {
+  		...
+  		public boolean equals(Object anObject) {
+  			if (this == anObject) {
+  				return true;
+  			}
+  			return (anObject instanceof String aString)
+  							&& (!COMPACT_STRINGS || this.coder == aString.coder)
+  							&& StringLatin1.equals(value, aString.value);
+  		}
+  		...
+  	}
+  ```
 
 ### 4. `hashCode()`
 
@@ -244,9 +305,18 @@ public class Object {
 }
 ```
 
----
+- `equals()` 메서드 재정의 시 반드시 `hashCode()` 메서드도 함께 재정의 필요
+  ```java
+  @Override
+  public int hashCode() {
+  	return Objects.hash(name, age);
+  }
+  ```
+  - 재정의하지 않을 경우 Java의 컬렉션 프레임워크에서 해시코드를 사용하는 HashSet, HashMap과 같은 자료구조 사용 시 문제 발생할 수 있음
 
 ### ☀️ 오늘의 배움
+
+---
 
 - **값 반환**
   1. 의미 없는 값 return
