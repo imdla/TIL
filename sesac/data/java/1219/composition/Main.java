@@ -18,12 +18,8 @@ public class Main {
 //        Person person2 = new Person("person2", new Pencil[]{red, blue, yellow});
 //        person2.writeMany();
 
-        Pencil pencil = new Pencil("red");
-        Person p1 = new Person("p1", pencil);
-        p1.use();
 
-
-        // Engine
+        // Car & Engine
         System.out.println();
         System.out.println("Engine ------------------");
         Engine engine5 = new Engine(5);
@@ -34,6 +30,16 @@ public class Main {
 
         car.accel();
         car2.accel();
+
+
+        // Person & Tool (Car & Pencil)
+        Pencil pencil = new Pencil("red");
+        Person p1 = new Person("p1", pencil);
+        p1.use();
+        p1.tool = car;
+        p1.use();
+
+
 
         // Weapon & Character
         System.out.println();
