@@ -4,30 +4,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Student {
-    protected String name;
-    protected int age;
-    protected Grade grade;
+    private String name;
+    private int age;
+    private Map<String, Integer> grade;
 
     public Student(String name, int age) {
         this.name = name;
         this.age = age;
+        this.grade = new HashMap<>();
     }
 
-    Map<String, Integer> allGrades = new HashMap<>();
-
-    // 성적 입력
-    public void inputGrade(Grade grade) {
-        allGrades.put(grade.subject, grade.score);
+    // 성적 저장
+    public Map<String, Integer> addGrade(String subject, Integer score) {
+        grade.put(subject, score);
+        return grade;
     }
 
-    // 평균 성적 계산
-    public int calculateGradeAvg() {
-        int gradeSum = 0;
-        for (Integer value : allGrades.values()) {
-            gradeSum += value;
+    // 성적 조회
+    public void showInfo() {
+        System.out.println("name = " + name);
+        System.out.println("age = " + age);
+        System.out.println("grade = " + grade);
+    }
+
+    // 성적 평균 계산
+    public double averageScore() {
+        Integer sum = 0;
+        for (Integer value : grade.values()) {
+            sum += value;
         }
-        int gradeAvg = gradeSum / allGrades.size();
 
-        return gradeAvg;
+        return (double) sum / grade.size();
     }
 }
