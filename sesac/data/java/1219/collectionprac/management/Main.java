@@ -18,5 +18,15 @@ public class Main {
 
         s2.showInfo();
         System.out.println(s2.averageScore());
+
+        System.out.println();
+        StudentManager studentManager = new StudentManager();
+        studentManager.addStudent(s1);
+        studentManager.addStudent(s2);
+
+        studentManager.showStudentsInfo();
+
+        Student one = studentManager.findStudentByName("s1");
+        one.showInfo();
     }
 }

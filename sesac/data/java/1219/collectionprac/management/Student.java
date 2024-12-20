@@ -36,4 +36,8 @@ public class Student {
 
         return (double) sum / grade.size();
     }
+
+    public String getName() {
+        return name;
+    }
 }
