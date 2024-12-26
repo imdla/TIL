@@ -1,6 +1,7 @@
 package com.example.demo.mysite;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -29,5 +30,16 @@ public class PostApi {
     @GetMapping("/posts")
     public List<Post> readPosts() {
         return posts;
+    }
+
+    // read - 단일 조회
+    @GetMapping("/posts/{id}")
+    public Post readPostById(@PathVariable("id") Long id) {
+        for (Post post : posts) {
+            if (post.getId().equals(id)) {
+                return post;
+            }
+        }
+        return null;
     }
 }
