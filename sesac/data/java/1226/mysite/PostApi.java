@@ -34,9 +34,22 @@ public class PostApi {
 
     // read - 단일 조회
     @GetMapping("/posts/{id}")
-    public Post readPostById(@PathVariable("id") Long id) {
+    public Post readPostById(@PathVariable Long id) {
         for (Post post : posts) {
             if (post.getId().equals(id)) {
+                return post;
+            }
+        }
+        return null;
+    }
+
+    // update (변경 내용 / id / url)
+    @GetMapping("/posts/{id}/update")
+    public Post updatePost(@PathVariable Long id) {
+        for (Post post : posts) {
+            if (post.getId().equals(id)) {
+                post.setTitle("update title");
+                post.setContent("update content");
                 return post;
             }
         }
