@@ -55,4 +55,14 @@ public class PostApi {
         }
         return null;
     }
+
+    // delete
+    @GetMapping("/posts/{id}/delete")
+    public void deletePost(@PathVariable Long id) {
+        for (Post post : posts) {
+            if (post.getId().equals(id)) {
+                posts.remove(post);
+            }
+        }
+    }
 }
