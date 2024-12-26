@@ -1,8 +1,6 @@
 package com.example.myproject.mysite;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +30,7 @@ public class ProductApi {
 
     // read - 단일 조회
     @GetMapping("/products/{id}")
-    public Product readProduct(@PathVariable Long id) {
+    public Product readProductById(@PathVariable Long id) {
         for (Product product : products) {
             if (product.getId().equals(id)) {
                 return product;
@@ -56,10 +54,13 @@ public class ProductApi {
     // delete
     @GetMapping("/products/{id}/delete")
     public void deleteProduct(@PathVariable Long id) {
+        Product removedProduct = null;
         for (Product product : products) {
             if (product.getId().equals(id)) {
-                products.remove(product);
+                removedProduct = product;
             }
         }
+        products.remove(removedProduct);
+
     }
 }
