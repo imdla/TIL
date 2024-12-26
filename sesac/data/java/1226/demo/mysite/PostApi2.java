@@ -1,14 +1,12 @@
 package com.example.demo.mysite;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class PostApi {
+public class PostApi2 {
     List<Post> posts = new ArrayList<Post>();
     private Long id = 0L; // 게시글 생성에서 id 생성위한 장치
 
@@ -18,24 +16,19 @@ public class PostApi {
         posts.add(new Post(++id, "title", "content"));
     }
 
-    // create (post / 내용 / url)
-    @GetMapping("/posts/create")
-    // restful
-    // "posts" / method : POST
+    @PostMapping("/v2/posts")
     public Post createPost() {
         Post post = new Post(++id, "title", "content");
         posts.add(post);
         return post;
     }
 
-    // read (posts / get)
-    @GetMapping("/posts")
+    @GetMapping("/v2/posts")
     public List<Post> readPosts() {
         return posts;
     }
 
-    // read - 단일 조회
-    @GetMapping("/posts/{id}")
+    @GetMapping("/v2/posts/{id}")
     public Post readPostById(@PathVariable Long id) {
         for (Post post : posts) {
             if (post.getId().equals(id)) {
@@ -45,10 +38,7 @@ public class PostApi {
         return null;
     }
 
-    // update (변경 내용 / id / url)
-    @GetMapping("/posts/{id}/update")
-    // restful
-    // "posts/{id}" / method : PUT / PATCH
+    @PutMapping("/v2/posts/{id}")
     public Post updatePost(@PathVariable Long id) {
         for (Post post : posts) {
             if (post.getId().equals(id)) {
@@ -60,10 +50,7 @@ public class PostApi {
         return null;
     }
 
-    // delete
-    @GetMapping("/posts/{id}/delete")
-    // restful
-    // "posts/{id}" / method : DELETE
+    @DeleteMapping("/v2/posts/{id}")
     public Post deletePost(@PathVariable Long id) {
         for (Post post : posts) {
             if (post.getId().equals(id)) {
