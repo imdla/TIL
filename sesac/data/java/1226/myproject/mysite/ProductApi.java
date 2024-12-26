@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequestMapping("/products")
 @RestController
 public class ProductApi {
     List<Product> products = new ArrayList<>();
@@ -15,7 +16,7 @@ public class ProductApi {
     }
 
     // create (url / 내용 / post)
-    @GetMapping("/products/create")
+    @PostMapping
     public Product createProduct() {
         Product product = new Product(++id, "productName", 10000);
         products.add(product);
@@ -23,13 +24,13 @@ public class ProductApi {
     }
 
     // read - 전체 조회
-    @GetMapping("/products")
+    @GetMapping
     public List<Product> readProducts() {
         return products;
     }
 
     // read - 단일 조회
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     public Product readProductById(@PathVariable Long id) {
         for (Product product : products) {
             if (product.getId().equals(id)) {
@@ -40,7 +41,7 @@ public class ProductApi {
     }
 
     // update
-    @GetMapping("/products/{id}/update")
+    @PutMapping("/{id}")
     public Product updateProduct(@PathVariable Long id) {
         for (Product product : products) {
             if (product.getId().equals(id)) {
@@ -52,7 +53,7 @@ public class ProductApi {
     }
 
     // delete
-    @GetMapping("/products/{id}/delete")
+    @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id) {
         Product removedProduct = null;
         for (Product product : products) {
