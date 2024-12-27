@@ -20,12 +20,20 @@ public class PostApi4 {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Post createPost(@RequestBody Post newPost) {
+    public Post createPost(@RequestBody Post newPost) throws IllegalAccessException {
         System.out.println(newPost.getTitle());
         System.out.println(newPost.getContent());
 
         String title = newPost.getTitle();
         String content = newPost.getContent();
+
+        if (title == null || title.isBlank()) {
+            throw new RuntimeException("please input title !");
+        }
+
+        if (content == null || content.isBlank()) {
+            throw new IllegalAccessException("please input content !");
+        }
 
         Post post = new Post(++id, title, content);
         posts.add(post);
@@ -48,7 +56,7 @@ public class PostApi4 {
     }
 
     @PutMapping("/{id}")
-    public Post updatePost(@PathVariable Long id, @RequestBody Post updatePost) {
+    public Post updatePost(@PathVariable Long id, @RequestBody Post updatePost) throws IllegalAccessException {
         for (Post post : posts) {
             if (post.getId().equals(id)) {
                 System.out.println(updatePost.getTitle());
@@ -56,6 +64,14 @@ public class PostApi4 {
 
                 String title = updatePost.getTitle();
                 String content = updatePost.getContent();
+
+                if (title == null || title.isBlank()) {
+                    throw new RuntimeException("Please input title");
+                }
+
+                if (content == null || content.isBlank()) {
+                    throw new IllegalAccessException("please input content !");
+                }
 
                 post.setTitle(title);
                 post.setContent(content);
