@@ -1,5 +1,6 @@
 package com.example.demo.mysite;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class PostApi4 {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Post createPost(@RequestBody Post newPost) {
         System.out.println(newPost.getTitle());
         System.out.println(newPost.getContent());
@@ -64,12 +66,37 @@ public class PostApi4 {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Post deletePost(@PathVariable Long id) {
+        Post removedPost = null;
         for (Post post : posts) {
             if (post.getId().equals(id)) {
-                posts.remove(post);
+                removedPost = post;
             }
         }
+        posts.remove(removedPost);
         return null;
+    }
+
+    @GetMapping("/paged")
+    public List<Post> getPagedPosts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+
+        // 1. 페이지네이션을 위한 더미데이터 추가
+        for (int i = 1; i <= 20; i++) {
+            String title = "제목 " + i;
+            String content = "내용 " + i;
+            Post post = new Post(++id, title, content);
+            posts.add(post);
+        }
+
+        // 2. 시작 인덱스와 끝 인덱스 계산
+        int startIndex = (page - 1) * size;
+        int endIndex = Math.min(startIndex + size, posts.size());
+
+        // 3. 페이지에 해당하는 데이터만 추출
+        return posts.subList(startIndex, endIndex);
     }
 }
