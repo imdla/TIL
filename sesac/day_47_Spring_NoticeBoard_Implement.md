@@ -461,3 +461,81 @@ public class PostApi {
 	}
 }
 ```
+---
+
+## <mark color="#fbc956">상호작용 가능한 게시판 구현</mark>
+
+
+
+> 사용자에게 입력받을 수 있도록 수정
+
+### 1. HTTP Request Body
+
+- HTTP 요청의 본문(Body)에 들어있는 데이터
+- POST, PUT, PATCH 요청에서 주로 사용
+- 클라이언트가 서버로 데이터 전송할 때 사용
+
+- Request Body와 Query Parameter
+    - **Request Body**
+        - URL : `/articles`
+        - Body : `{"title": "제목", "content": "내용"}`
+        - POST, PUT, PATCH에서 사용
+        - URL에 데이터가 노출되지 않음
+    - Query Paeameter
+        - URL : `/articles?title=제목&content=내용`
+        - 주로 GET 요청에서 사용
+        - URL에 데이터가 노출됨
+
+### 2. Spring에서 Request Body 받기
+
+- `@RequestBody` 어노테이션
+    - 입력 받은 데이터는 객체로 변환해 사용
+    - 조건
+        1. JSON의 key 이름과 객체 필드명 일치해야 함
+        2. 대소문자도 정확히 일치해야 함
+        3. Getter/Setter가 있어야 함
+
+```java
+@PostMapping("/articles")
+public Atricle createArticle(@RequestBody Article article) {
+	return article;
+}
+```
+
+- String, Map, 또 다른 class로 받을 수 있음
+
+### 3. Create 변경
+
+- `@RequestBody` 이용해 데이터 입력 받을 수 있음
+
+```java
+@PostMapping
+public Post createPost(@RequestBody Post newPost) {
+	String title = newPost.getTitle();
+	String content = newPost.getContent();
+	Post post = new Post(++id, title, content);
+	
+	posts.add(post);
+	
+	return post;
+}
+```
+
+### 4. Update 변경
+
+```java
+@PutMapping("/{id}")
+public Post updatePost(@PathVariable Long id, @RequestBody Post updatedPost) {
+	String newTitle = updatedPost.getTitle();
+	String newContent = updatedPost.getContent();
+	
+	for (Post post : posts) {
+		if (post.getId().equals(id)) {
+			post.setTitle(newTitle);
+			post.setContent(newContent);
+			return post;
+		}
+	}
+	return null;
+}
+```
