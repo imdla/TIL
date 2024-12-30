@@ -1,11 +1,13 @@
 package com.example.demo.mysite.postMVC;
 
 import com.example.demo.mysite.Post;
+import org.springframework.stereotype.Repository;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class PostRepository {
     private List<Post> posts = new ArrayList<>();
     private Long id = 0L;
