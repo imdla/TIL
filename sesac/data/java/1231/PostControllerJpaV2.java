@@ -16,23 +16,23 @@ public class PostControllerJpaV2 {
         return postServiceJpa.createPost(newPost);
     }
 
-//    @GetMapping
-//    public List<PostJpaV2> readPosts() {
-//        return postServiceJpa.readPosts();
-//    }
-//
-//    @GetMapping("/{id}")
-//    public PostJpaV2 readPostById(@PathVariable Long id) {
-//        return postServiceJpa.readPostById(id);
-//    }
-//
-//    @PutMapping("/{id}")
-//    public PostJpaV2 updatePost(@PathVariable Long id, @RequestBody PostJpaV2 updatedPost) {
-//        return postServiceJpa.updatePost(id, updatedPost);
-//    }
-//
-//    @DeleteMapping("/id}")
-//    public void deletePost(@PathVariable Long id) {
-//        postServiceJpa.deletePost(id);
-//    }
+    @GetMapping
+    public List<PostJpaV2> readPosts() {
+        return postServiceJpa.readPosts();
+    }
+
+    @GetMapping("/{id}")
+    public PostJpaV2 readPostById(@PathVariable Long id) {
+        return postServiceJpa.readPostById(id);
+    }
+
+    @PutMapping("/{id}")
+    public PostJpaV2 updatePost(@PathVariable Long id, @RequestBody PostJpaV2 updatedPost) {
+        return postServiceJpa.updatePost(id, updatedPost);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletePost(@PathVariable Long id) {
+        postServiceJpa.deletePost(id);
+    }
 }
