@@ -12,9 +12,9 @@ import java.util.List;
 public class PostServiceJpaV2 {
     private final PostRepositoryJpaV2 postRepositoryJpa;
 
-//    public PostJpaV2 createPost(PostJpaV2 post) {
-//        return postRepositoryJpa.save(post);
-//    }
+    public PostJpaV2 createPost(PostJpaV2 post) {
+        return postRepositoryJpa.save(post);
+    }
 //
 //    public List<PostJpaV2> readPosts() {
 //        return postRepositoryJpa.findAll();
