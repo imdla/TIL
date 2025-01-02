@@ -1,5 +1,6 @@
 package com.example.demo.myjpasitev4;
 
+import com.example.demo.myjpasitev4.dto.PostUpdateRequestDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,5 +27,12 @@ public class PostV4 {
         this.title = title;
         this.content = content;
         this.author = author;
+    }
+
+    public PostV4 update(PostUpdateRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+
+        return this;
     }
 }
