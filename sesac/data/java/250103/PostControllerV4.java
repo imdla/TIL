@@ -5,6 +5,7 @@ import com.example.demo.myjpasitev4.dto.PostListResponseDto;
 import com.example.demo.myjpasitev4.dto.PostResponseDto;
 import com.example.demo.myjpasitev4.dto.PostUpdateRequestDto;
 import com.example.demo.myjpasitev4.exceptions.ResourceNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class PostControllerV4 {
 
     // Post method / url / data
     @PostMapping
-    public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@RequestBody PostCreateRequestDto requestDto) {
+    public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @RequestBody PostCreateRequestDto requestDto) {
 //        PostResponseDto data = postServiceV4.createPost(requestDto);
 //        ApiResponse<PostResponseDto> response = ApiResponse.ok(data);
 //        return ResponseEntity.status(HttpStatus.CREATED).body(response);
