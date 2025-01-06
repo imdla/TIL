@@ -29,6 +29,39 @@
 - **columnDefinition** : 컬럼 정의를 직접 지정
   - ex. `@Column(columnDefinition = "TEXT")`
 
+### 3. Validation과의 차이
+
+- @Column
+  - DB 테이블의 스키마를 정의
+  - 애플리케이션 실행 시점에 DB 테이블 생성에 영향
+  - DB 레벨의 제약조건 설정
+- Validation
+  - 애플리케이션 실행 중 데이터 검증
+  - 요청 데이터가 서비스 로직에 도달하기 전에 검증
+  - 비즈니스 로직 레벨의 제약조건 설정
+
+### 4. 기타 어노테이션
+
+- @Enumerated(EnumType.STRING)
+  - 자바 enum 타입을 엔티티 클래스에서 사용할 때 사용
+  - EnumType.STRING : enum의 이름을 DB에 저장
+
+```java
+public eum Status {
+	ACTIVE,
+	INACTIVE,
+	PENDING,
+	BANNED
+}
+
+@Entity
+public class SomeEntity {
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Status status;
+}
+```
+
 ---
 
 ## <mark color="#fbc956">JPQL</mark>
@@ -91,6 +124,31 @@ String jpql = "SELECT m FROM Member m WHERE m.username = '" + username + "'";
   - 결과가 없으면 NoResultException
   - 결과가 둘 이상이면 NonUniqueResultException
 
+### 4. JpaRepository에서의 JPQL
+
+- **정의** : 추상 메서드에 `@Query` 어노테이션 사용
+
+  ```java
+  public interface PostRepository extends JpaRepository<Post, Long> {
+  	@Query("SELECT p FROM Post p")
+  	List<Post> findAllPost();
+  }
+  ```
+
+- **파라미터 바인딩** : 메서드의 parameter에 작성
+
+  ```java
+  @Query("SELECT p FROM Post p WHERE p.author = :author")
+  List<Post> findByAuthor(@Param("author") String author);
+  ```
+
+- **수정, 삭제** : `@Modifying` 어노테이션
+  ```java
+  @Modifying
+  @Query("UPDATE Post p SET p.title = :title WHERE p.id = :id")
+  int updateTitle(@Param("id") Long id, @Param("title") String title)
+  ```
+
 ---
 
 ## <mark color="#fbc956">Spring Data JPA의 쿼리 메서드</mark>
@@ -133,7 +191,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
   - `findBy{ field }()` : field로 조회
 
-- AND, OR
+- And, Or
   - `findByUsernameAndAge(String username, int age)`
 - Between
   - `findByAgeBetween(int startAge, int endAge)`
