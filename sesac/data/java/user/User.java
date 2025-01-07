@@ -1,9 +1,7 @@
 package com.example.demo.usersite;
 
 import com.example.demo.usersite.dto.UserUpdateRequestDto;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Null;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,16 +15,19 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(name = "username", nullable = false, unique = true, updatable = false)
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "nickname", nullable = false)
     private String nickname;
 
+    @Column(name = "age")
     private int age;
+
+    @Column(name = "isActive", nullable = false)
     private boolean isActive = true;
 
     @Builder

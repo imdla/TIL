@@ -17,7 +17,7 @@ public class UserCreateRequestDto {
     private String username;
 
     @NotBlank(message = "이메일은 필수 입력입니다.")
-    @Email
+    @Email(message = "올바른 이메일 형식을 입력해주세요.")
     private String email;
 
     @NotBlank(message = "닉네임은 필수 입력입니다.")

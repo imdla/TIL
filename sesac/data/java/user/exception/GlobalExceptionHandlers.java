@@ -54,4 +54,14 @@ public class GlobalExceptionHandlers {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error("입력값 검증에 실패했습니다", "BAD_REQUEST", errors));
     }
+
+    // 중복 불가
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error("잘못된 요청입니다.", "BAD_REQUEST"));
+    }
+
+
 }

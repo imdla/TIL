@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class UserListResoponseDto {
-    private final long id;
+    private final int id;
+    private final String username;
     private final String email;
     private final String nickname;
     private int age;
@@ -19,6 +20,7 @@ public class UserListResoponseDto {
     public static UserListResoponseDto from(User user) {
         return UserListResoponseDto.builder()
                 .id(user.getId())
+                .username(user.getUsername())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .age(user.getAge())
