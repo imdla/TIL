@@ -1,11 +1,6 @@
 package com.example.relation.domain.post;
 
-import com.example.relation.*;
-import com.example.relation.domain.post.dto.PostCreateRequestDto;
-import com.example.relation.domain.post.dto.PostListResponseDto;
-import com.example.relation.domain.post.dto.PostResponseDto;
-import com.example.relation.domain.post.dto.PostUpdateRequestDto;
-import com.example.relation.global.exception.ResourceNotFoundException;
+import com.example.relation.domain.post.dto.*;
 import com.example.relation.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +34,20 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    // Version 1. Post와 Comments 따로 가져와서 DTO 합치기
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<PostResponseDto>> readPostById(@PathVariable Long id) {
-        ApiResponse<PostResponseDto> response = ApiResponse.ok(postService.readPostById(id));
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<PostWithCommentResponseDto>> readPostById(@PathVariable Long id) {
+        ApiResponse<PostWithCommentResponseDto> response = ApiResponse.ok(postService.readPostById(id));
 
+        return ResponseEntity.ok(response);
+    }
+
+    //  Version 2. Post와 Comments 같이 가져와 DTO로 만들기
+    @GetMapping("/v2/{id}")
+    public ResponseEntity<ApiResponse<PostWithCommentResponseDtoV2>> readPostByIdV2(@PathVariable Long id) {
+        ApiResponse<PostWithCommentResponseDtoV2> response = ApiResponse.ok(postService.readPostByIdV2(id));
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
