@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,8 +28,8 @@ public class Post extends BaseTimeEntity {
 
     private String author;
 
-    @OneToMany(mappedBy = "post")
-    private List<Comment> comments;
+    @OneToMany(mappedBy = "post",  fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     public Post(String title, String content, String author) {

@@ -30,6 +30,8 @@ public class PostService {
                 .toList();
     }
 
+    //  Version 1
+    // post, comment 따로 가져와 -> DTO로 합치기
     public PostWithCommentResponseDto readPostById(Long id){
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
         // comments 추가
@@ -38,7 +40,8 @@ public class PostService {
         return PostWithCommentResponseDto.from(post, comments);
     }
 
-    // post, comment 한 번에 가져오기
+    //  Version 2
+    // post, comment 한 번에 가져와 -> DTO로 바꾸기
     public PostWithCommentResponseDtoV2 readPostByIdV2(Long id){
         Post post = postRepository.findByIdWithComment(id)
                 .orElseThrow(() -> new ResourceNotFoundException());

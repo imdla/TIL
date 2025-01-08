@@ -24,4 +24,12 @@ public class CommentService {
         Comment comment = requestDto.toEntity(post);
         return CommentResponseDto.from(commentRepository.save(comment));
     }
+
+    @Transactional
+    public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(ResourceNotFoundException::new);
+
+        return CommentResponseDto.from(comment.update(requestDto));
+    }
 }

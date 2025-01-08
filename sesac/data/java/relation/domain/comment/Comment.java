@@ -1,5 +1,6 @@
 package com.example.relation.domain.comment;
 
+import com.example.relation.domain.comment.dto.CommentRequestDto;
 import com.example.relation.domain.post.Post;
 import com.example.relation.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -24,6 +25,16 @@ public class Comment extends BaseTimeEntity {
     @Builder
     public Comment(String content, Post post) {
         this.content = content;
+        setPost(post);
+    }
+
+    public void setPost(Post post) {
         this.post = post;
+        post.getComments().add(this);
+    }
+
+    public Comment update(CommentRequestDto requestDto) {
+        this.content = requestDto.getContent();
+        return this;
     }
 }
