@@ -1,6 +1,7 @@
 package com.example.relation.domain.post;
 
 import com.example.relation.domain.post.dto.*;
+import com.example.relation.domain.tag.TagRequestDto;
 import com.example.relation.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,43 @@ public class PostController {
 
     }
 
+    // version 1. 댓글 개수 조회 (집계 함수)
+    @GetMapping("/comment-count")
+    public ResponseEntity<ApiResponse<List<PostListWithCommentCountResponseDto>>> readPostsWithCommentCount() {
+        return ResponseEntity.ok(ApiResponse.ok(
+                postService.readPostsWithCommentCount())
+        );
+    }
+
+    // version 2. 댓글 개수 조회2 (JPQL에 DTO 사용)
+    @GetMapping("/comment-count-dto")
+    public ResponseEntity<ApiResponse<List<PostListWithCommentCountResponseDto>>> readPostsWithCommentCountDto() {
+        return ResponseEntity.ok(ApiResponse.ok(
+                postService.readPostsWithCommentCountDto()
+        ));
+    }
+
+    // version 1. post와 tag를 가지고 연결시켜주기 (PostTag)
+    @PostMapping("/{id}/tags")
+    public void addTagToPost(@PathVariable Long id, @Valid @RequestBody TagRequestDto requestDto) {
+        postService.addTagToPost(id, requestDto);
+    }
+
+    // version 2. 게시글에 대한 댓글과 태그들 함께 조회
+    @GetMapping("/{id}/detail")
+    public ResponseEntity<ApiResponse<PostWithCommentAndTagResponseDto>> readPostsByIdWithCommentAndTag(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.ok(
+        postService.readPostsByIdWithCommentAndTag(id)
+        ));
+    }
+
+    // version 3. batch size 사용
+    @GetMapping("/{id}/detail/v2")
+    public ResponseEntity<ApiResponse<PostWithCommentAndTagResponseDtoV2>> readPostsByIdWithCommentAndTagV2(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                postService.readPostsByIdWithCommentAndTagV2(id)
+        ));
+    }
 }
 
 
