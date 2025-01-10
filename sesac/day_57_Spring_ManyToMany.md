@@ -237,7 +237,7 @@
      				"LEFT JOIN pt.tag")
      List<Post> findWithCommentAndTag();
      ```
-     ```json
+     ```java
      @BatchSize(size = 100)
      @OneToMany(mappedBy = "post",  fetch = FetchType.LAZY)
      private List<Comment> comments;
@@ -246,7 +246,7 @@
      @OneToMany(mappedBy = "post",  fetch = FetchType.LAZY)
      private List<PostTag> postTags;
      ```
-     ```json
+     ```java
      spring.jpa.properties.hibernate.default_batch_fetch_size=100
      ```
      ```java
@@ -264,7 +264,7 @@
      				"LEFT JOIN pt.tag")
      List<Post> findWithCommentAndTag();
      ```
-     ```json
+     ```java
      Hibernate: select p1_0.id,p1_0.author,p1_0.content,p1_0.created_at,p1_0.title,p1_0.updated_at from post p1_0 left join comment c1_0 on p1_0.id=c1_0.post_id left join post_tag pt1_0 on p1_0.id=pt1_0.post_id
      Hibernate: select c1_0.post_id,c1_0.id,c1_0.content,c1_0.created_at,c1_0.updated_at from comment c1_0 where c1_0.post_id in (?,?)
      Hibernate: select pt1_0.post_id,pt1_0.id,pt1_0.create_at,pt1_0.tag_id from post_tag pt1_0 where pt1_0.post_id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
@@ -334,14 +334,14 @@
     ```
 
 - **LAZY** → 쿼리 3개 발생
-  ```json
+  ```java
   @Query("SELECT p FROM Post p " +
   				"JOIN p.postTags pt " +
   				"JOIN pt.tag t " +
   				"WHERE t.name = :tagName")
   List<Post> findAllByTagName(@Param("tagName") String tagName);
   ```
-  ```json
+  ```java
   Hibernate: select p1_0.id,p1_0.author,p1_0.content,p1_0.created_at,p1_0.title,p1_0.updated_at from post p1_0 join post_tag pt1_0 on p1_0.id=pt1_0.post_id join tag t1_0 on t1_0.id=pt1_0.tag_id where t1_0.name=?
   Hibernate: select pt1_0.post_id,pt1_0.id,pt1_0.create_at,pt1_0.tag_id from post_tag pt1_0 where pt1_0.post_id=?
   Hibernate: select t1_0.id,t1_0.name from tag t1_0 where t1_0.id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
@@ -362,14 +362,14 @@
   }
   ```
 - **FETCH JOIN** → 쿼리 1개 발생
-  ```json
+  ```java
   @Query("SELECT p FROM Post p " +
   				"JOIN FETCH p.postTags pt " +
   				"JOIN FETCH pt.tag t " +
   				"WHERE t.name = :tagName")
   List<Post> findAllByTagName(@Param("tagName") String tagName);
   ```
-  ```json
+  ```java
   Hibernate: select p1_0.id,p1_0.author,p1_0.content,p1_0.created_at,pt1_0.post_id,pt1_0.id,pt1_0.create_at,t1_0.id,t1_0.name,p1_0.title,p1_0.updated_at from post p1_0 join post_tag pt1_0 on p1_0.id=pt1_0.post_id join tag t1_0 on t1_0.id=pt1_0.tag_id where t1_0.name=?
   ```
   ```json
@@ -388,14 +388,14 @@
   }
   ```
 - **batch size** → 쿼리 3개 발생
-  ```json
+  ```java
   @Query("SELECT p FROM Post p " +
   				"JOIN p.postTags pt " +
   				"JOIN pt.tag t " +
   				"WHERE t.name = :tagName")
   List<Post> findAllByTagName(@Param("tagName") String tagName);
   ```
-  ```json
+  ```java
   Hibernate: select p1_0.id,p1_0.author,p1_0.content,p1_0.created_at,p1_0.title,p1_0.updated_at from post p1_0 join post_tag pt1_0 on p1_0.id=pt1_0.post_id join tag t1_0 on t1_0.id=pt1_0.tag_id where t1_0.name=?
   Hibernate: select pt1_0.post_id,pt1_0.id,pt1_0.create_at,pt1_0.tag_id from post_tag pt1_0 where pt1_0.post_id=?
   Hibernate: select t1_0.id,t1_0.name from tag t1_0 where t1_0.id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
@@ -417,7 +417,7 @@
   ```
 - **batch size & FETCH JOIN** → 쿼리 1개 발생
 
-  ```json
+  ```java
   @Query("SELECT p FROM Post p " +
   				"JOIN FETCH p.postTags pt " +
   				"JOIN FETCH pt.tag t " +
@@ -425,7 +425,7 @@
   List<Post> findAllByTagName(@Param("tagName") String tagName);
   ```
 
-  ```json
+  ```java
   Hibernate: select p1_0.id,p1_0.author,p1_0.content,p1_0.created_at,pt1_0.post_id,pt1_0.id,pt1_0.create_at,t1_0.id,t1_0.name,p1_0.title,p1_0.updated_at from post p1_0 join post_tag pt1_0 on p1_0.id=pt1_0.post_id join tag t1_0 on t1_0.id=pt1_0.tag_id where t1_0.name=?
   ```
 
