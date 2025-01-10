@@ -84,7 +84,10 @@ public class PostController {
 
     // version 1. post와 tag를 가지고 연결시켜주기 (PostTag)
     @PostMapping("/{id}/tags")
-    public void addTagToPost(@PathVariable Long id, @Valid @RequestBody TagRequestDto requestDto) {
+    public void addTagToPost(
+            @PathVariable Long id,
+            @Valid @RequestBody TagRequestDto requestDto
+    ) {
         postService.addTagToPost(id, requestDto);
     }
 
@@ -102,6 +105,36 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.ok(
                 postService.readPostsByIdWithCommentAndTagV2(id)
         ));
+    }
+
+    // Post List 조회 (comments + postTags + tag)
+    @GetMapping("/detail")
+    public ResponseEntity<ApiResponse<List<PostWithCommentAndTagResponseDtoV2>>> readPostsDetail() {
+        return ResponseEntity.ok(ApiResponse.ok(
+                postService.readPostsDetail()
+        ));
+    }
+
+    // Tag별 게시글 가져오기
+    @GetMapping("/tags")
+    public ResponseEntity<ApiResponse<List<PostWithTagResponseDto>>> readPostsByTag(@RequestParam String tag) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                postService.readPostsByTag(tag)
+        ));
+    }
+
+    // Post 생성 시 Tag 함께 추가하기
+    @PostMapping("/tags")
+    public ResponseEntity<ApiResponse<PostWithTagResponseDto>> createPostWithTags(@Valid @RequestBody PostCreateWithTagsRequestDto requestDto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(
+                        ApiResponse.ok(
+                                "게시글이 성공적으로 작성되었습니다.",
+                                "CREATED",
+                                postService.createPostWithTags(requestDto)
+                        )
+                );
     }
 }
 

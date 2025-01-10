@@ -8,6 +8,7 @@ import com.example.relation.domain.post.entity.PostTag;
 import com.example.relation.domain.tag.Tag;
 import com.example.relation.domain.tag.TagRepository;
 import com.example.relation.domain.tag.TagRequestDto;
+import com.example.relation.global.exception.DuplicationEntityException;
 import com.example.relation.global.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    // version 1. 댓글 개수 조회 (집계 함수)
     public List<PostListWithCommentCountResponseDto> readPostsWithCommentCount() {
         List<Object[]> results = postRepository.findAllWithCommentCount();
         return results.stream()
@@ -88,16 +90,39 @@ public class PostService {
                 .toList();
     }
 
+    // version 2. 댓글 개수 조회2 (JPQL에 DTO 사용)
     public List<PostListWithCommentCountResponseDto> readPostsWithCommentCountDto() {
         return postRepository.findAllWithCommentCountDTO();
     }
 
+    // version 1. post와 tag를 가지고 연결시켜주기 (PostTag)
     @Transactional
     public void addTagToPost(Long id, TagRequestDto requestDto) {
         Post post = postRepository.findById(id)
                         .orElseThrow(ResourceNotFoundException::new);
+//        Tag tag = tagRepository.findByName(requestDto.getName())
+//                        .orElseThrow(ResourceNotFoundException::new);
+
+        // tag 가져오자
+        // 만약에 없으면 만들자
+
+        // if (tag 확인) {
+        //      있으면 가져오기
+        // } else {
+        //      없으면 만들기
+        // }
+        // -> 옵셔널
         Tag tag = tagRepository.findByName(requestDto.getName())
-                        .orElseThrow(ResourceNotFoundException::new);
+                .orElseGet(() -> {
+                    Tag newTag = new Tag(requestDto.getName());
+                    return tagRepository.save(newTag);
+                    // tagRepository의 메서드로 가져오기
+//                    tagRepository.save(requestDto.toEntity());
+                });
+
+        if (postTagRepository.existsByPostAndTag(post, tag)) {
+            throw new DuplicationEntityException();
+        }
 
         PostTag postTag = new PostTag();
 
@@ -109,6 +134,7 @@ public class PostService {
         postTagRepository.save(postTag);
     }
 
+    // version 2. 게시글에 대한 댓글과 태그들 함께 조회
     public PostWithCommentAndTagResponseDto readPostsByIdWithCommentAndTag(Long id) {
 //               post 조회 시 comments와 tag 같이 가져오기
 //                Post post = postRepository.findByIdWithCommentAndTag(id)
@@ -121,10 +147,43 @@ public class PostService {
         return PostWithCommentAndTagResponseDto.from(postWithTag, comments);
     }
 
+    // version 3. batch size 사용
     public PostWithCommentAndTagResponseDtoV2 readPostsByIdWithCommentAndTagV2(Long id) {
         Post post = postRepository.findByIdWithCommentAndTag(id)
                 .orElseThrow(ResourceNotFoundException::new);
 
         return PostWithCommentAndTagResponseDtoV2.from(post);
+    }
+
+    // List 조회
+    public List<PostWithCommentAndTagResponseDtoV2> readPostsDetail() {
+        return postRepository.findWithCommentAndTag().stream()
+                .map(PostWithCommentAndTagResponseDtoV2::from)
+                .toList();
+    }
+
+    // Tag별 게시글 가져오기
+    public List<PostWithTagResponseDto> readPostsByTag(String tag) {
+        return postRepository.findAllByTagName(tag).stream()
+                .map(PostWithTagResponseDto::from)
+                .toList();
+    }
+
+    // Post 생성 시 Tag 함께 추가하기
+    @Transactional
+    public PostWithTagResponseDto createPostWithTags(PostCreateWithTagsRequestDto requestDto) {
+        Post post = postRepository.save(requestDto.toEntity());
+        List<String> tagNames = requestDto.getTags();
+
+        for (String tagName : tagNames) {
+            Tag tag = tagRepository.findByName(tagName).orElseGet(() -> {
+                Tag newTag = new Tag(tagName);
+                return tagRepository.save(newTag);
+            });
+            PostTag postTag = new PostTag(post, tag);
+//            postTagRepository.save(postTag); 더티체킹
+            post.getPostTags().add(postTag);
+        }
+        return PostWithTagResponseDto.from(post);
     }
 }

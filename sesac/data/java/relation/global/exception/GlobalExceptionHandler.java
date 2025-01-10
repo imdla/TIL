@@ -77,4 +77,11 @@ public class GlobalExceptionHandler {
 //                .body(ApiResponse.error("서버 내부 오류가 발생했습니다.", "INTERNAL_SERVER_ERROR"));
 //    }
 
+    @ExceptionHandler(DuplicationEntityException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUserNotFound(DuplicationEntityException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getMessage(), "DUPLICATE_ENTITY"));
+    }
+
 }

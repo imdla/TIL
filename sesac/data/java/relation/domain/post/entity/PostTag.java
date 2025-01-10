@@ -2,6 +2,7 @@ package com.example.relation.domain.post.entity;
 
 import com.example.relation.domain.tag.Tag;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,6 +30,12 @@ public class PostTag {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createAt;
+
+    @Builder
+    public PostTag(Post post, Tag tag) {
+        this.post = post;
+        this.tag = tag;
+    }
 
     public void addPost(Post post) {
         this.post = post;
