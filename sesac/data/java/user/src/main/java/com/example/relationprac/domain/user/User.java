@@ -1,11 +1,14 @@
-package com.example.demo.usersite;
+package com.example.relationprac.domain.user;
 
-import com.example.demo.usersite.dto.UserUpdateRequestDto;
+import com.example.relationprac.domain.user.dto.UserRequestDto;
+import com.example.relationprac.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -13,21 +16,21 @@ import lombok.NoArgsConstructor;
 public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(name = "username", nullable = false, unique = true, updatable = false)
+    @Column(nullable = false, unique = true, updatable = false)
     private String username;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "nickname", nullable = false)
+    @Column(nullable = false)
     private String nickname;
 
     @Column(name = "age")
     private int age;
 
-    @Column(name = "isActive", nullable = false)
+    @Column(nullable = false)
     private boolean isActive = true;
 
     @Builder
@@ -38,7 +41,8 @@ public class User extends BaseTimeEntity {
         this.age = age;
     }
 
-    public User update(UserUpdateRequestDto requestDto) {
+    public User update(UserRequestDto requestDto) {
+        this.username = requestDto.getUsername();
         this.email = requestDto.getEmail();
         this.nickname = requestDto.getNickname();
         this.age = requestDto.getAge();

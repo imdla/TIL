@@ -1,15 +1,17 @@
-package com.example.demo.usersite;
+package com.example.relationprac.global.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 
 import java.util.Map;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
     private final String message;
-    private final String code;      // 비즈니스 코드
+    private final String code;
     private final T data;
-    private Map<String, String> errors;
+    private final Map<String, String> errors;
 
     private ApiResponse(T data) {
         this.message = "Success";
@@ -18,16 +20,14 @@ public class ApiResponse<T> {
         this.errors = null;
     }
 
-    private ApiResponse(String message, String code, T data, Map<String, String> errors) {
+    public ApiResponse(String message, String code, T data, Map<String, String> errors) {
         this.message = message;
         this.code = code;
         this.data = data;
         this.errors = errors;
     }
 
-    public static <T> ApiResponse<T> ok(T data) {
-        return new ApiResponse<>(data);
-    }
+    public static <T> ApiResponse<T> ok(T data) { return new ApiResponse<>(data); }
 
     public static <T> ApiResponse<T> ok(String message, String code, T data) {
         return new ApiResponse<>(message, code, data, null);

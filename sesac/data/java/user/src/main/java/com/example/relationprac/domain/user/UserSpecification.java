@@ -1,8 +1,9 @@
-package com.example.demo.usersite;
+package com.example.relationprac.domain.user;
 
 import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpecification {
+
     public static Specification<User> withNickname(String nickname) {
         return (root, query, criteriaBuilder) ->
                 nickname == null ? null : criteriaBuilder.equal(root.get("nickname"), nickname);
