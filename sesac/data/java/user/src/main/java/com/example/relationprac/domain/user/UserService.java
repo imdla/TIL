@@ -1,5 +1,7 @@
 package com.example.relationprac.domain.user;
 
+import com.example.relationprac.domain.team.Team;
+import com.example.relationprac.domain.team.TeamRepository;
 import com.example.relationprac.domain.user.dto.UserRequestDto;
 import com.example.relationprac.domain.user.dto.UserResponseDto;
 import com.example.relationprac.global.exception.ResourceNotFoundException;
@@ -15,8 +17,10 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     // CREATE
+    @Transactional
     public UserResponseDto addUser(UserRequestDto requestDto) {
         // username 중복 검사
         if (userRepository.existsByUsername(requestDto.getUsername())) {
@@ -28,7 +32,15 @@ public class UserService {
             throw new IllegalArgumentException();
         }
 
+        // team 검사
+        Team team = teamRepository.findByTeamName(requestDto.getTeam())
+                .orElseGet(() -> {
+                    Team newTeam = new Team(requestDto.getTeam());
+                    return teamRepository.save(newTeam);
+                });
+
         User user = userRepository.save(requestDto.toEntity());
+        user.setTeam(team);
         return UserResponseDto.from(user);
     }
 
@@ -49,9 +61,26 @@ public class UserService {
     // UPDATE
     @Transactional
     public UserResponseDto updateUser(Long id, UserRequestDto requestDto) {
+        // username 중복 검사
+        if (userRepository.existsByUsername(requestDto.getUsername())) {
+            throw new IllegalArgumentException();
+        }
+
+        // email 중복 검사
+        if (userRepository.existsByEmail(requestDto.getEmail())) {
+            throw new IllegalArgumentException();
+        }
+
+        // team 검사
+        Team team = teamRepository.findByTeamName(requestDto.getTeam())
+                .orElseGet(() -> {
+                    Team newTeam = new Team(requestDto.getTeam());
+                    return teamRepository.save(newTeam);
+                });
+
         User user = userRepository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
-        user.update(requestDto);
+        user.update(requestDto, team);
         return UserResponseDto.from(user);
     }
 

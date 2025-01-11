@@ -1,5 +1,6 @@
 package com.example.relationprac.domain.user;
 
+import com.example.relationprac.domain.team.Team;
 import com.example.relationprac.domain.user.dto.UserRequestDto;
 import com.example.relationprac.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -7,8 +8,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -33,20 +32,30 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isActive = true;
 
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
+
     @Builder
-    public User(String username, String email, String nickname, int age) {
+    public User(String username, String email, String nickname, int age, Team team) {
         this.username = username;
         this.email = email;
         this.nickname = nickname;
         this.age = age;
     }
 
-    public User update(UserRequestDto requestDto) {
+    public User update(UserRequestDto requestDto, Team team) {
         this.username = requestDto.getUsername();
         this.email = requestDto.getEmail();
         this.nickname = requestDto.getNickname();
         this.age = requestDto.getAge();
+        setTeam(team);
 
         return this;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+        team.getUsers().add(this);
     }
 }

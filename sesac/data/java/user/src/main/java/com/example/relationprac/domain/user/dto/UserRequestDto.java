@@ -1,5 +1,6 @@
 package com.example.relationprac.domain.user.dto;
 
+import com.example.relationprac.domain.team.Team;
 import com.example.relationprac.domain.user.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,6 +27,9 @@ public class UserRequestDto {
 
     @Range(min = 0, max = 150, message = "나이는 0세 이상 150세 이하입니다.")
     private int age;
+
+    @NotBlank(message = "팀은 필수 입력입니다.")
+    private String team;
 
     public User toEntity() {
         return User.builder()

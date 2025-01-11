@@ -1,5 +1,6 @@
 package com.example.relationprac.domain.user.dto;
 
+import com.example.relationprac.domain.team.Team;
 import com.example.relationprac.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class UserResponseDto {
     private final int age;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private final String team;
 
     public static UserResponseDto from(User entity) {
         return UserResponseDto.builder()
@@ -26,6 +28,7 @@ public class UserResponseDto {
                 .age(entity.getAge())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
+                .team(entity.getTeam().getTeamName())
                 .build();
     }
 }
