@@ -181,7 +181,7 @@ public class PostService {
                 return tagRepository.save(newTag);
             });
             PostTag postTag = new PostTag(post, tag);
-//            postTagRepository.save(postTag); 더티체킹
+            // postTagRepository.save(postTag);
             post.getPostTags().add(postTag);
         }
         return PostWithTagResponseDto.from(post);
