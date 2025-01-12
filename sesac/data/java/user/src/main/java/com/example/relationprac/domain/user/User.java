@@ -1,5 +1,6 @@
 package com.example.relationprac.domain.user;
 
+import com.example.relationprac.domain.orders.Orders;
 import com.example.relationprac.domain.team.Team;
 import com.example.relationprac.domain.user.dto.UserRequestDto;
 import com.example.relationprac.global.entity.BaseTimeEntity;
@@ -35,6 +36,9 @@ public class User extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @OneToMany(mappedBy = "orders")
+    private Orders orders;
 
     @Builder
     public User(String username, String email, String nickname, int age, Team team) {

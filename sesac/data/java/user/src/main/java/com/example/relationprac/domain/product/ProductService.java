@@ -3,6 +3,7 @@ package com.example.relationprac.domain.product;
 import com.example.relationprac.domain.product.dto.ProductRequestDto;
 import com.example.relationprac.domain.product.dto.ProductResponseDto;
 import com.example.relationprac.global.exception.ResourceNotFoundException;
+import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,11 @@ public class ProductService {
     // CREATED
     @Transactional
     public ProductResponseDto addProduct(ProductRequestDto requestDto) {
+        // productName 중복 검사
+        if (productRepository.existsByProductName(requestDto.getProductName())) {
+            throw new DuplicateRequestException();
+        }
+
         Product product = requestDto.toEntity();
         return ProductResponseDto.from(productRepository.save(product));
     }
@@ -25,6 +31,12 @@ public class ProductService {
     public ProductResponseDto updateProduct(Long productId, ProductRequestDto requestDto) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(ResourceNotFoundException::new);
+
+        // productName 중복 검사
+        if (productRepository.existsByProductName(requestDto.getProductName())) {
+            throw new DuplicateRequestException();
+        }
+
         product.update(requestDto);
 
         return ProductResponseDto.from(product);
