@@ -5,14 +5,20 @@ import com.example.relation.domain.comment.CommentRepository;
 import com.example.relation.domain.post.dto.*;
 import com.example.relation.domain.post.entity.Post;
 import com.example.relation.domain.post.entity.PostTag;
+import com.example.relation.domain.post.repository.PostRepository;
+import com.example.relation.domain.post.repository.PostTagRepository;
 import com.example.relation.domain.tag.Tag;
 import com.example.relation.domain.tag.TagRepository;
 import com.example.relation.domain.tag.TagRequestDto;
+import com.example.relation.global.common.service.FileService;
 import com.example.relation.global.exception.DuplicationEntityException;
 import com.example.relation.global.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,6 +30,7 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final TagRepository tagRepository;
     private final PostTagRepository postTagRepository;
+    private final FileService fileService;
 
     @Transactional
     public PostResponseDto createPost(PostCreateRequestDto requestDto) {
@@ -185,5 +192,42 @@ public class PostService {
             post.getPostTags().add(postTag);
         }
         return PostWithTagResponseDto.from(post);
+    }
+
+    // READ - page 단위
+    public List<PostListResponseDto> readPostsWithPage(Pageable pageable) {
+        return postRepository.findAll(pageable).getContent()
+                .stream().map(PostListResponseDto::from).toList();
+    }
+
+    // READ - page 추가 정보
+    public PostListWithPageResponseDto readPostsWithPageDetail(Pageable pageable) {
+        return PostListWithPageResponseDto.from(postRepository.findAll(pageable));
+    }
+
+    // READ - page (comment 같이)
+    public List<PostWithCommentResponseDtoV2> readPostsWithCommentPage(Pageable pageable) {
+        return postRepository.findPostsWithCommentPage(pageable)
+                .getContent().stream().map(
+                        PostWithCommentResponseDtoV2::from
+                ).toList();
+    }
+
+    // CREATE - image
+    @Transactional
+    public PostWithImageResponseDto createPostWithImage(
+            PostCreateRequestDto requestDto,
+            MultipartFile image
+    ) {
+        String imageUrl = null;
+
+        if (image != null && !image.isEmpty()) {
+            imageUrl = fileService.saveFile(image);
+        }
+
+        Post post = requestDto.toEntity();
+        post.setImageUrl(imageUrl);
+
+        return PostWithImageResponseDto.from(postRepository.save(post));
     }
 }

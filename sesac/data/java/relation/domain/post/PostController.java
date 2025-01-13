@@ -5,9 +5,12 @@ import com.example.relation.domain.tag.TagRequestDto;
 import com.example.relation.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -135,6 +138,41 @@ public class PostController {
                                 postService.createPostWithTags(requestDto)
                         )
                 );
+    }
+
+    // READ - page 단위
+    @GetMapping("/pages")
+    public ResponseEntity<ApiResponse<List<PostListResponseDto>>> readPostsWithPage(Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                postService.readPostsWithPage(pageable)
+        ));
+    }
+
+    // READ - page 추가 정보
+    @GetMapping("/pages/detail")
+    public ResponseEntity<ApiResponse<PostListWithPageResponseDto>> readPostsWithPageDetail(Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                postService.readPostsWithPageDetail(pageable)
+        ));
+    }
+
+    // READ - page (comment 같이)
+    @GetMapping("/detail/pages")
+    public ResponseEntity<ApiResponse<List<PostWithCommentResponseDtoV2>>> readPostsWithCommentPage(Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                postService.readPostsWithCommentPage(pageable)
+        ));
+    }
+
+    // CREATE - image
+    @PostMapping("/images")
+    public ResponseEntity<ApiResponse<PostWithImageResponseDto>> createPostWithImage(
+            @RequestPart(value = "data") PostCreateRequestDto requestDto,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) throws FileUploadException {
+        return ResponseEntity.ok(ApiResponse.ok(
+                postService.createPostWithImage(requestDto, image)
+        ));
     }
 }
 
