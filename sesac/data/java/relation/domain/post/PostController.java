@@ -5,7 +5,6 @@ import com.example.relation.domain.tag.TagRequestDto;
 import com.example.relation.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -169,7 +168,7 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostWithImageResponseDto>> createPostWithImage(
             @RequestPart(value = "data") PostCreateRequestDto requestDto,
             @RequestPart(value = "image", required = false) MultipartFile image
-    ) throws FileUploadException {
+    ) {
         return ResponseEntity.ok(ApiResponse.ok(
                 postService.createPostWithImage(requestDto, image)
         ));
