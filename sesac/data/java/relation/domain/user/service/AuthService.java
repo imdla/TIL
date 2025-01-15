@@ -58,7 +58,7 @@ public class AuthService {
                 )
         );
 
-        // 6. jwt 프로바이더를 DI 해줘야 한다. -> jwtTokenProvider 만들어주자
+        // 5. jwt 프로바이더를 DI 해줘야 한다. -> jwtTokenProvider 만들어주자
         // security/jwt/jwtTokenProvider
         String jwt = jwtTokenProvider.createToken(authentication);
 
