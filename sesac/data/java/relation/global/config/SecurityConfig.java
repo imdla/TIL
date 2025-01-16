@@ -1,11 +1,13 @@
 package com.example.relation.global.config;
 
+import com.example.relation.global.security.SecurityPathConfig;
 import com.example.relation.global.security.handler.CustomAccessDeniedHandler;
 import com.example.relation.global.security.handler.JwtAuthenticationEntryPoint;
 import com.example.relation.global.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -46,7 +48,8 @@ public class SecurityConfig {
                 // URL 접근 권한 설정
                 // "/auth/" 로 시작하는 모든 요청에 대해 인증없이 접근 허용
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**", "/error", "/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, SecurityPathConfig.PUBLIC_GET_URLS).permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
