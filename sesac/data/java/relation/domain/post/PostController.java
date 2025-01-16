@@ -1,13 +1,19 @@
 package com.example.relation.domain.post;
 
-import com.example.relation.domain.post.dto.*;
+import com.example.relation.domain.post.dto.request.Post2WithAuthorCreateRequestDto;
+import com.example.relation.domain.post.dto.request.PostCreateRequestDto;
+import com.example.relation.domain.post.dto.request.PostCreateWithTagsRequestDto;
+import com.example.relation.domain.post.dto.request.PostUpdateRequestDto;
+import com.example.relation.domain.post.dto.response.*;
 import com.example.relation.domain.tag.TagRequestDto;
+import com.example.relation.domain.user.entity.User;
 import com.example.relation.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -172,6 +178,19 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.ok(
                 postService.createPostWithImage(requestDto, image)
         ));
+    }
+
+    // CREATE - Post2 (jwt로 받아온 작성자와 함께)
+    @PostMapping("/post2")
+    public ResponseEntity<ApiResponse<Post2ResponseDto>> createPost2(
+            @Valid @RequestBody Post2WithAuthorCreateRequestDto requestDto,
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.ok(
+                        postService.createPost2(requestDto, user)
+                ));
     }
 }
 

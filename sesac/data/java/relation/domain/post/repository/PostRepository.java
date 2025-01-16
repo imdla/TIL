@@ -1,6 +1,6 @@
 package com.example.relation.domain.post.repository;
 
-import com.example.relation.domain.post.dto.PostListWithCommentCountResponseDto;
+import com.example.relation.domain.post.dto.response.PostListWithCommentCountResponseDto;
 import com.example.relation.domain.post.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +33,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "GROUP BY p")
     List<Object[]> findAllWithCommentCount();
 
-    @Query("SELECT new com.example.relation.domain.post.dto.PostListWithCommentCountResponseDto(p.id, p.title, p.createdAt, COUNT(c)) " +
+    @Query("SELECT new com.example.relation.domain.post.dto.response.PostListWithCommentCountResponseDto(p.id, p.title, p.createdAt, COUNT(c)) " +
             "FROM Post p " +
             "LEFT JOIN p.comments c " +
             "GROUP BY p")

@@ -1,7 +1,7 @@
 package com.example.relation.domain.post.entity;
 
 import com.example.relation.domain.comment.Comment;
-import com.example.relation.domain.post.dto.PostUpdateRequestDto;
+import com.example.relation.domain.post.dto.request.PostUpdateRequestDto;
 import com.example.relation.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
