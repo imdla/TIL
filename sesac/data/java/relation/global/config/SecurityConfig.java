@@ -32,11 +32,19 @@ public class SecurityConfig {
     }
 
     @Bean
+    // HTTP 요청에 대한 보안 처리 흐름 정의
+    // HttpSecurity : HTTP 요청을 보안하는 다양한 옵션 제공
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // csrf 방지 기능 비활성화
                 .csrf(csrf -> csrf.disable())
+                // 세션 관리 설정
+                // 상태없는 세션 관리 방식, 세션을 생성하지 않음
+                // REST API에서는 서버에서 상태를 저장하지 않고 JWT 활성화
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // URL 접근 권한 설정
+                // "/auth/" 로 시작하는 모든 요청에 대해 인증없이 접근 허용
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
@@ -57,6 +65,8 @@ public class SecurityConfig {
             UserDetailsService userDetailsService,
             PasswordEncoder passwordEncoder
     ) {
+        // 사용자 인증을 위한 클래스
+        // 사용자 정보 로드, 비밀번호 비교해 인증 처리
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);
@@ -64,6 +74,7 @@ public class SecurityConfig {
         // passwordEncoder -> pw를 인코딩할 수 있는 객체
         // 를 활용해서 "authenticationManager"에 대한 구현체를 만들어준다.
 
+        // 인증 수행하는 AuthenticationManager의 구현체
         return new ProviderManager(authProvider);
     }
 }

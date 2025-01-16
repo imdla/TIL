@@ -23,6 +23,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // 사용자가 제공한 인증정보 검증, 해당 사용자가 유효한지 확인
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -51,6 +52,8 @@ public class AuthService {
         // 3. 객체로 만든 것을 manager에게 통과시켜 인증 정보가 들어있는 "authentication" 객체를 만듭니다.
         // 4. "authenticationManager"를 활용하기 위해 DI를 해줍니다 -> security config로 이동
         Authentication authentication = authenticationManager.authenticate(
+                // Spring Security에서 사용되는 기본적인 인증 토큰
+                // 아이디와 비밀번호 활용해 토큰 생성
                 new UsernamePasswordAuthenticationToken(
                         // 2. DTO로부터 온 정보를 객체로 만듭니다.
                         requestDto.getUsername(),
