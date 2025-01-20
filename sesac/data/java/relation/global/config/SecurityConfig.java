@@ -52,7 +52,9 @@ public class SecurityConfig {
                 // URL 접근 권한 설정
                 // "/auth/" 로 시작하는 모든 요청에 대해 인증없이 접근 허용
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/verify").authenticated()
                         .requestMatchers("/auth/**", "/error", "/images/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "swagger-ui.html", "/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, SecurityPathConfig.PUBLIC_GET_URLS).permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
