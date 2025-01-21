@@ -8,6 +8,8 @@ import com.example.relation.domain.post.dto.response.*;
 import com.example.relation.domain.tag.TagRequestDto;
 import com.example.relation.domain.user.entity.User;
 import com.example.relation.global.response.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -19,19 +21,26 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Tag(name = "게시글 관리", description = "게시글 관리 API")
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
 
+    @Operation(summary = "게시글 작성", description = """
+            제목, 내용을 입력받아 게시글을 작성한다.
+            """)
     @PostMapping
-    public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @RequestBody PostCreateRequestDto requestDto) {
+    public ResponseEntity<ApiResponse<PostResponseDto>> createPost(
+            @Valid @RequestBody PostCreateRequestDto requestDto
+    ) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(
-                        ApiResponse.ok("게시글이 성공적으로 작성되었습니다","CREATED",
-                                postService.createPost(requestDto)
+                .body(ApiResponse.ok(
+                        "게시글이 성공적으로 작성되었습니다",
+                        "CREATED",
+                        postService.createPost(requestDto)
                         )
                 );
     }
@@ -103,7 +112,7 @@ public class PostController {
     @GetMapping("/{id}/detail")
     public ResponseEntity<ApiResponse<PostWithCommentAndTagResponseDto>> readPostsByIdWithCommentAndTag(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.ok(
-        postService.readPostsByIdWithCommentAndTag(id)
+            postService.readPostsByIdWithCommentAndTag(id)
         ));
     }
 

@@ -6,6 +6,7 @@ import com.example.relation.domain.user.dto.request.SignupRequestDto;
 import com.example.relation.domain.user.dto.response.SignupResponseDto;
 import com.example.relation.domain.user.dto.response.TokenResponseDto;
 import com.example.relation.domain.user.entity.User;
+import com.example.relation.global.exception.DuplicationEntityException;
 import com.example.relation.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,11 +33,11 @@ public class AuthService {
     public SignupResponseDto signup(SignupRequestDto requestDto) {
 
         if (userRepository.existsByUsername(requestDto.getUsername())) {
-            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+            throw new DuplicationEntityException("이미 사용 중인 아이디입니다.");
         }
 
         if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+            throw new DuplicationEntityException("이미 사용 중인 이메일입니다.");
         }
 
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());

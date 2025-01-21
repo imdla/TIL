@@ -22,6 +22,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(ex.getMessage(), "NOT_FOUND"));
     }
 
+    // 존재하지 않는 URL 요청
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleNotFoundException(NoHandlerFoundException ex) {
         return ResponseEntity
@@ -32,6 +33,7 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    // 유효하지 않은 입력값 (유효성 검사)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Object>> handleValidationException(
             MethodArgumentNotValidException ex
@@ -58,6 +60,7 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    // 허용되지 않은 메서드 요청
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiResponse<Void>> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex) {
 
@@ -67,6 +70,7 @@ public class GlobalExceptionHandler {
 
     }
 
+    // 이미 존재하는 데이터
     @ExceptionHandler(DuplicationEntityException.class)
     public ResponseEntity<ApiResponse<Void>> handleUserNotFound(DuplicationEntityException ex) {
         return ResponseEntity
@@ -74,6 +78,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(ex.getMessage(), "DUPLICATE_ENTITY"));
     }
 
+    // 파일 업로드 오류
     @ExceptionHandler(FileUploadException.class)
     public ResponseEntity<ApiResponse<Void>> handleFileUpload(FileUploadException ex) {
         return ResponseEntity
