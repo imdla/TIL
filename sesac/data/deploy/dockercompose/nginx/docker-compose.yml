@@ -1,0 +1,18 @@
+# nginx/docker-compose.yml
+# 필수 아님
+# docker-compose 문법 버전
+version: '3.8'
+
+# 관리할 것들을 명시
+# 컨테이너(서비스) 관리 블록들의 최상위 블록
+services:
+  # docker-compose의 서비스 이름
+  nginx:
+    # 어떤 이미지 사용할 것인지
+    image: nginx:stable
+    # 포트 명시
+    # 컨테이너 실행 시 네트워크, 환경변수들을 같이 명시
+    ports:
+      - '80:80'
+# 위의 명령어들은
+# docker run -p 80:80 nginx:stable 과 동일한 상태
