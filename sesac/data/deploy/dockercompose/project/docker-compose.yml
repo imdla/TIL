@@ -1,0 +1,57 @@
+services:
+  db:
+    container_name: db-container
+    image: mysql:8.0
+    volumes:
+      - db-volume:/var/lib/mysql
+    env_file:
+      - .env
+    networks:
+      - db-connect
+    # db 컨테이너 실행 시 프로그램이 생성 및 최초 실행 시 초기화되는 시간 필요
+    # compose 최초 실행 시 db 컨테이너 내부의 MySQL 서버 설정이 안되어있는 경우가 있어
+    # backend 입장에서 Spring Boot가 실행되면 db 서버가 설정이 시간이 필요하기에 못찾음 
+    # (db 서버가 실행이 안된 상태)
+    # 최초 1회 서버 설정이 완료되었는지 옵션을 통해 확인
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  backend:
+    container_name: backend-container
+    build:
+      context: ./backend
+    image: backend-image:latest
+    env_file:
+      - .env
+    networks:
+      - db-connect
+      - backend-connect
+    # 컨테이너 생성 순서 지정, 의존성 설정
+    # db 실행 후 backend 실행
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    container_name: frontend-container
+    build:
+      context: ./frontend
+    image: frontend-image:latest
+    ports:
+      - '80:80'
+    networks:
+      - backend-connect
+    depends_on:
+      - backend
+      - db
+
+volumes:
+  db-volume:
+
+networks:
+  db-connect:
+  backend-connect:
