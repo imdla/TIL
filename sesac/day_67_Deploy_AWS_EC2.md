@@ -211,6 +211,42 @@
   3. 생성한 Host 더블 클릭으로 연결
   4. 첫 연결 시 안내문 동의
 
+### 4. SSH 포트 번호 변경
+
+- 포트 번호를 변경해 무차별 공격 대상에서 벗어나 보안 강화 가능
+
+1. `/etc/ssh/sshd_config` 파일 수정
+
+   ```bash
+   sudo vim /etc/ssh/sshd_config
+   ```
+
+2. 포트 변경 후 저장
+   - 수정 전
+     ```bash
+     #Port 22
+     ```
+   - 수정 후
+     ```bash
+     Port 2222
+     ```
+3. SSH 재실행
+
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl restart sshd
+
+   # 또는
+   sudo systemctl daemon-reload
+   sudo systemctl restart ssh
+   ```
+
+4. SSH 서비스 상태 확인
+
+   ```bash
+   sudo systemctl status ssh
+   ```
+
 ---
 
 ## <mark color="#fbc956">원격 서버 초기 설정</mark>
