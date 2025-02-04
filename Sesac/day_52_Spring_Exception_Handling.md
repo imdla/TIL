@@ -253,7 +253,7 @@
 
 > Spring Data Jpa, DTO 이용한 Post의 Create 흐름
 
-![JPA_DTO.png](/sesac/assets/day51.png)
+![JPA_DTO.png](/Sesac/assets/day51.png)
 
 - **Post Create**
 

@@ -33,7 +33,7 @@
 
 > **PostList 조회 (comments + postTags + tag)**
 
-![relation.jpg](/sesac/assets/day57.jpg)
+![relation.jpg](/Sesac/assets/day57.jpg)
 
 - **현재 Post, Comment, Tag의 JSON**
   ```json

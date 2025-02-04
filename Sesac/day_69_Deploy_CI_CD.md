@@ -1,4 +1,4 @@
-![image.png](/sesac/assets/day69.png)
+![image.png](/Sesac/assets/day69.png)
 
 ## <mark color="#fbc956">CI (Continuous Integration)</mark>
 

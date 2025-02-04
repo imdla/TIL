@@ -486,7 +486,7 @@ public void deletePost(Long id) {
   - more. 쿼리 DSL
 - **더티 체킹**
 
-  ![더티체킹.png](/sesac/assets/day50.png)
+  ![더티체킹.png](/Sesac/assets/day50.png)
 
 - **@Transactional**
   - 트랜잭션 관리

@@ -101,7 +101,7 @@ java -jar build/libs/backend-0.0.1-SNAPSHOT.jar
      - 변경 사항만 부분적으로 빌드하는 증분 빌드가 가능해 빌드 속도가 빠름
 
 - **빌드 설정**
-  ![image.png](/sesac/assets/day65_2.png)
+  ![image.png](/Sesac/assets/day65_2.png)
   - `jar` : 서버를 구동시키는 파일
   - WAS (웹 애플리케이션 서버) : 동적인 데이터를 사용자에게 제공하는 서버
   - Tomcat : 내장되어 있는 웹 어플리케이션

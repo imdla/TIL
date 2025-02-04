@@ -122,7 +122,7 @@
     - 호스트 네트워크를 컨테이너 네트워크가 그대로 사용
     - 컨테이너의 포트를 호스트의 포트를 매핑시키지 않음
   - **`Bridge Network`**
-    ![image.png](/sesac/assets/day65.png)
+    ![image.png](/Sesac/assets/day65.png)
     - Docker가 Bridge 네트워크를 생성함
     - 호스트와 격리된 컨테이너만의 네트워크
     - 컨테이너 포트와 호스트 포트를 매핑시킴

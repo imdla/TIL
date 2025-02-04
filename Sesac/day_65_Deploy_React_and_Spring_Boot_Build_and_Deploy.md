@@ -203,7 +203,7 @@
 
 - **프록시 서버**
 
-  ![image.png](/sesac/assets/day65_4.png.png)
+  ![image.png](/Sesac/assets/day65_4.png.png)
 
   - WAS는 사용자에게 노출 안되는게 좋음
   - WAS를 숨길 서버를 만듦 → 프록시 서버
@@ -312,4 +312,4 @@
   - 프록시 서버는 도커 컨테이너 내부에 있음
   - 클라이언트와 WAS는 host에 있음
 
-![image.png](/sesac/assets/day65_3.png.png)
+![image.png](/Sesac/assets/day65_3.png.png)
