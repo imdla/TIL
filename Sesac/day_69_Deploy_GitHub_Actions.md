@@ -159,3 +159,208 @@ jobs:
   shell: /usr/bin/bash -e {0}
   my scret message is ***
   ```
+
+### 4. SSH Agent 활용 SSH 연결
+
+- **SSH Agent**
+  - SSH 개인 키를 메모리에 저장하고, SSH 연결 인증 작업을 자동으로 처리하는 프로세스
+  - **SSH 연결 워크플로우 과정**
+    1. 원격 서버에 등록된 공개 키와 매핑된 개인 키를 Secrets에 저장
+    2. 워크플로우 내에서 개인 키를 불러오고, SSH Agent를 활용해 메모리에 개인 키 저장
+    3. 원격 서버에 ssh 연결을 시도할 때 마다 메모리의 개인 키로 자동 인증 처리
+  - **워크플로우에서 사용할 저장소 secrets 생성**
+    - `SSH_HOST` : SSH 연결 시도 원격 서버 호스트 (IP 또는 도메인 )
+    - `SSH_PORT` : SSH 연결 포트
+    - `SSH_USERNAME` : SSH 연결 시도 원격 서버 사용자 이름
+    - `SSH_PRIVATE_KEY` : 원격 서버에 등록된 공개 키와 매핑되는 개인 키
+- `.github/workflows/03_ssh-agent.yml`
+
+  ```yaml
+  name: SSH-Agent
+
+  on:
+    push:
+      paths:
+        - ".github/workflows/ssh-agent.yml"
+      branches:
+        - main
+  jobs:
+    ssh-agent:
+      runs-on: ubuntu-24.04
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4.2.2
+
+        - name: webfactory/ssh-agent
+          uses: webfactory/ssh-agent@v0.9.0
+          with:
+            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+        - name: Add Host Key to Known Hosts
+          run: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts || true
+
+        - name: Run remote command test
+          run: ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "touch 'hello-world.txt'"
+
+        - name: Copy README.md file
+          run: scp -P ${{ secrets.SSH_PORT }} README.md ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/
+  ```
+
+- SSH Agent
+
+  ```yaml
+  - name: webfactory/ssh-agent
+          uses: webfactory/ssh-agent@v0.9.0
+          with:
+            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+  ```
+
+  - SSH Agent를 활용해 SSH 연결을 위한 개인 키를 메모리에 저장
+  - 이후 SSH 연결을 할 때 메모리에 저장된 개인 키로 자동 인증
+
+- run: `ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts || true`
+
+  - 원격 서버의 키를 `known_hosts` (핑거 프린트) 파일에 추가해 원격 서버를 신뢰할 수 있는 서버로 설정
+
+- `ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "touch 'hello-world.txt'"`
+
+  - 원격 서버에 SSH 연결을 사용해 `touch 'hello-world.txt'` 명령어를 실행
+
+- `scp -P ${{ secrets.SSH_PORT }} README.md ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/`
+  - SCP를 활용해 원격 서버에 파일(README.md)을 복사
+  - SCP 명령어를 활용할 때 포트를 지정하기 위해서는 대문자 P `-P` 사용
+
+### 5. ssh-action과 scp-actions
+
+- **ssh-action**
+
+  - GitHub Actions에서 SSH 연결을 통해 원격 서버에 명령어를 실행하기 위한 도구
+  - 여러 개의 명령어를 순차적으로 실행할 수 있어 기존 명령어를 활용하는 방법보다 편하게 SSH 활용 가능
+
+  ```yaml
+  - name: Run remote command test
+    uses: appleboy/ssh-action@v1.2.0
+    with:
+      host: ${{ secrets.SSH_HOST}}
+      username: ${{ secrets.SSH_USERNAME}}
+      key: ${{ secrets.SSH_PRIVATE_KEY }}
+      port: ${{ secrets.SSH_PORT}}
+      #  SSH 연결로 순차적으로 실행할 명령어 목록
+      script: |
+        touch 'hello-world1.txt'
+        touch 'hello-world2.txt'
+        touch 'hello-world3.txt'
+  ```
+
+- **scp-actions**
+  - Secure Copy Protocol을 사용해 파일을 원격 서버에 복사하기 위한 도구
+  - 여러 개의 파일을 복사할 수 있어 기존 명령어를 활용하는 방법보다 편하게 SCP 활용 가능
+  ```yaml
+  - name: Copy README.md file
+    uses: appleboy/scp-action@v0.1.7
+    with:
+      host: ${{ secrets.SSH_HOST}}
+      username: ${{ secrets.SSH_USERNAME}}
+      key: ${{ secrets.SSH_PRIVATE_KEY }}
+      port: ${{ secrets.SSH_PORT}}
+      # 복사할 파일 이름, 여러개의 파일을 복사할 때는 쉼표(,)로 파일 이름을 구분한다
+      source: "README.md"
+      # 원격 서버에 복사될 위치
+      target: "~/"
+  ```
+
+---
+
+### ☀️ 오늘의 배움
+
+- **Github Actions 에서 EC2 인스턴스를 SSH 통해 연결**
+
+  ![image.png](/Sesac/assets/day69_2.png)
+
+  - SSH 통해 연결할 때 SSH-Agent 사용할 것임
+
+    - 워크플로우에서 사용할 저장소 secrets 생성
+      - SSH 연결 시 IP 주소, 연결 포트, username, 개인 키가 필요
+    - `.github/workflows/ssg-agent.yml`
+
+      ```yaml
+      name: Deploy Service
+
+      on:
+        push: # 워크플로우 실행 조건 이벤트
+          branches: # 워크플로우 실행 조건 브랜치
+            - main
+      jobs:
+        ssh-agent: # Job 이름
+          runs-on: ubuntu-24.04 # Github 워크스페이스 환경
+
+          steps: # 실행할 작업(step)
+            - name: Checkout code
+              uses: actions/checkout@v4.2.2
+
+            # 원격 서버에 등록된 공개 키와 매핑된 개인 키를 Secrets에 저장
+            - name: run ssh-agent
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+            # 원격 서버를 신뢰할 수 있는 서버로 등록하는 과정
+            # known_hosts : 원격 서버들의 지문이 저장된 파일
+            - name: ADD Remote Server Fingerprint to Known Hosts
+              run: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts || true
+
+            # SSH 연결위한 명령어
+            - name: create file on remote server
+              run: ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "touch 'hello-world.txt'"
+
+            # 파일 복사
+            # 로컬에서 복사할 파일, remote에 복사될 위치
+            - name: copy file to remote server
+              run: scp -P ${{ secrets.SSH_PORT }} README.md ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/
+
+            # ssh-actions
+            - name: Run remote command test
+              uses: appleboy/ssh-action@v1.2.0
+              with:
+                host: ${{ secrets.SSH_HOST }}
+                username: ${{ secrets.SSH_USERNAME }}
+                key: ${{ secrets.SSH_PRIVATE_KEY }}
+                port: ${{ secrets.SSH_PORT }}
+                # SSH 연결로 순차적으로 실행할 명령어 목록
+                # 1. work-directory 폴더 생성
+                # 2. work-directory 경로 이동
+                script: |
+                  touch 'hello-world1.txt'
+                  touch 'hello-world2.txt'
+                  touch 'hello-world3.txt'
+                  mkdir work-directory
+                  cd work-directory
+                  touch 'hello-world4.txt'
+
+            # scp-actions
+            - name: Copy README.md file
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                host: ${{ secrets.SSH_HOST }}
+                username: ${{ secrets.SSH_USERNAME }}
+                key: ${{ secrets.SSH_PRIVATE_KEY }}
+                port: ${{ secrets.SSH_PORT}}
+                # 복사할 파일 이름, 여러개의 파일을 복사할 때는 쉼표(,)로 파일 이름을 구분한다
+                source: "README.md"
+                # 원격 서버에 복사될 위치
+                target: "~/"
+      ```
+
+- scp-actions
+- ssh-action
+
+- **지문**은 호스트에서 서버가 안전한지 확인할 때 사용
+- **지문 저장**
+  - Termius 이용
+    - 중간에 UI를 활용해 연결할 서버인지 확인 가능
+    1. known_hohsts에 해당 서버의 정보를 저장할 것인지 묻고
+    2. 맞다고 응답하면, known_hohsts에 정보 저장
+  - GitHub Actions 이용
+    - 중간에 UI를 활용해 연결할 서버인지 확인하기 어려움
+    1. known_hosts에 저장할 서버 정보를 입력함
