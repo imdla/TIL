@@ -561,66 +561,571 @@ docker run -p 호스트포트:3306 -e MYSQL_ROOT_PASSWORD=1q2w3e4r! -e MYSQL_DAT
 
 ### 3. 워크플로우 작성
 
-- `.github/workflows/[파일명].yml`
+> **폴더 경로**
+>
+> - **📁 .github**
+>   - 📁 workflows
+>     - `*workflows.yml*`
+> - **📁 api**
+>   - `*.env*`
+>   - `*Dockerfile*`
+> - **📁 client**
+>   - `*Dockerfile*`
+>   - `*nginx.conf*`
+>   - 📁 templates
+>     - `*default.conf.template*`
+>     - `*https.conf.template*`
+> - **`*.env*`**
+> - **`*docker-compose.yml*`**
+
+- **No Cache**
+
+  - `.github/workflows/[파일명].yml`
+
+    ```yaml
+    name: deploy service
+
+    on:
+      push:
+        branches:
+          - main
+
+    jobs:
+      ssh-agent: # Job 이름
+        runs-on: ubuntu-24.04 # GitHub 워크스페이스 환경
+
+        steps: # 실행할 작업(step)
+          - name: Checkout code
+            uses: actions/checkout@v4
+
+          - name: Create .env file
+            run: |
+              echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env
+              echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
+              echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
+              echo "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" >> .env
+              echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> .env
+              echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+              echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+
+          - name: Add Remote Server Fingerprint to Known Hosts
+            run: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts || true
+
+          - name: Login DockerHub
+            run: echo '${{ secrets.DOCKER_PASSWORD}}' | docker login -u '${{ secrets.DOCKER_USERNAME }}' --password-stdin
+
+          - name: Docker Image Build
+            run: docker compose -f docker-compose.yml build
+
+          - name: Docker Image Push
+            run: docker compose -f docker-compose.yml push
+
+          - name: Copy .env / docker-compose.yml
+            uses: appleboy/scp-action@v0.1.7
+            with:
+              host: ${{ secrets.SSH_HOST }}
+              username: ${{ secrets.SSH_USERNAME }}
+              key: ${{ secrets.SSH_PRIVATE_KEY }}
+              port: ${{ secrets.SSH_PORT }}
+              source: "docker-compose.yml,.env"
+              target: "~/github-actions-work-directory"
+
+          - name: Pull Image & Up Container
+            uses: appleboy/ssh-action@v1.0.3
+            with:
+              host: ${{ secrets.SSH_HOST }}
+              username: ${{ secrets.SSH_USERNAME }}
+              key: ${{ secrets.SSH_PRIVATE_KEY }}
+              port: ${{ secrets.SSH_PORT }}
+              script: |
+                cd ~/github-actions-work-directory
+                docker compose -f docker-compose.yml pull
+                docker compose -f docker-compose.yml down
+                docker compose -f docker-compose.yml up -d
+    ```
+
+- With Cache
+
+  - `[파일명].yml`
+
+    ```yaml
+    name: deploy service
+
+    on:
+      push:
+        branches:
+          - main
+
+    jobs:
+      deploy: # Job 이름
+        runs-on: ubuntu-24.04
+
+        steps: # 실행할 작업(step)
+          - name: Checkout code
+            uses: actions/checkout@v4
+
+          - name: Cache Docker Image Layer
+            uses: actions/cache@v4.2.0
+            with:
+              path: /tmp/docker-cache
+              key: docker-cache-${{ github.sha }}
+              restore-keys: docker-cache-
+
+          - name: Create .env file
+            run: |
+              echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env
+              echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
+              echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
+              echo "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" >> .env
+              echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> .env
+              echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+              echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+
+          - name: Add Remote Server Fingerprint to Known Hosts
+            run: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts || true
+
+          - name: Login DockerHub
+            run: echo '${{ secrets.DOCKER_PASSWORD}}' | docker login -u '${{ secrets.DOCKER_USERNAME }}' --password-stdin
+
+          - name: Set up Docker BuildKit
+            uses: docker/setup-buildx-action@v3
+
+          - name: Create Buildkit 빌더
+            run: |
+              docker buildx create --use --name buildkit-builder
+
+          - name: Docker Image Build
+            run: docker compose -f docker-compose-cache.yml build
+
+          - name: Docker Image Push
+            run: docker compose -f docker-compose-cache.yml push
+
+          - name: Copy .env / docker-compose.yml
+            uses: appleboy/scp-action@v0.1.7
+            with:
+              host: ${{ secrets.SSH_HOST }}
+              username: ${{ secrets.SSH_USERNAME }}
+              key: ${{ secrets.SSH_PRIVATE_KEY }}
+              port: ${{ secrets.SSH_PORT }}
+              source: "docker-compose-cache.yml,.env"
+              target: "~/github-actions-work-directory"
+
+          - name: Pull Image & Up Container
+            uses: appleboy/ssh-action@v1.0.3
+            with:
+              host: ${{ secrets.SSH_HOST }}
+              username: ${{ secrets.SSH_USERNAME }}
+              key: ${{ secrets.SSH_PRIVATE_KEY }}
+              port: ${{ secrets.SSH_PORT }}
+              script: |
+                cd ~/github-actions-work-directory
+                docker compose -f docker-compose-cache.yml pull
+                docker compose -f docker-compose-cache.yml down
+                docker compose -f docker-compose-cache.yml up -d
+                docker system prune -f
+    ```
+
+  - `docker-compose-cache.yml`
+
+    ```yaml
+    services:
+      db:
+        container_name: db-container
+        image: mysql:8.0
+        volumes:
+          - db-volume:/var/lib/mysql
+        networks:
+          - db-network
+        env_file:
+          - .env
+
+        healthcheck:
+          test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+          interval: 10s
+          timeout: 5s
+          retries: 3
+          start_period: 30s
+      api:
+        container_name: api-container
+        build:
+          context: ./api
+          dockerfile: Dockerfile
+          cache_from:
+            - type=local,src=/tmp/docker-cache/api
+          cache_to:
+            - type=local,dest=/tmp/docker-cache/api,mode=max
+        image: nodecrewbeemo/api-image:latest
+        networks:
+          - db-network
+          - api-network
+        env_file:
+          - .env
+        depends_on:
+          db:
+            condition: service_healthy
+      client:
+        container_name: client-container
+        build:
+          context: ./client
+          dockerfile: Dockerfile
+          cache_from:
+            - type=local,src=/tmp/docker-cache/client
+          cache_to:
+            - type=local,dest=/tmp/docker-cache/client,mode=max
+        image: nodecrewbeemo/client-image:latest
+        ports:
+          - "80:80"
+          - "443:443"
+        networks:
+          - api-network
+        env_file:
+          - .env
+        depends_on:
+          - db
+          - api
+
+    volumes:
+      db-volume:
+
+    networks:
+      db-network:
+      api-network:
+    ```
+
+---
+
+## <mark color="#fbc956">5️⃣ HTTPS 설정</mark>
+
+### **1. 인증서 발급**
+
+1. **원격 서버 - 패키지 설치**
+
+   - cerbot : Let’s Encr
+
+   ```bash
+   sudo apt update
+   sudo apt install -y certbot
+   ```
+
+2. **원격 서버 - 개인 키와 인증서 생성**
+
+   > **80 포트 사용 중지**
+   >
+   > - 인증서 발급이 80포트로 이루어져 사용 중인 80 포트 컨테이너는 사용 중지해야함
+   >
+   > ```bash
+   > # 명령어는 docker-compose.yml과 같은 위치에서 실행
+   > docker compose down
+   > ```
+
+   ```bash
+   sudo certbot certonly --standalone -d [Public IPv4].sslip.io
+   ```
+
+3. **원격 서버 - Let’s Encrypt 인증서 발급 과정**
+
+   1. 이메일 작성 → 서비스 약관 동의 여부 → 뉴스 레터 구독 여부
+   2. 인증서 생성 확인
+
+      ```bash
+      sudo ls /etc/letsencrypt/live/도메인/
+      ```
+
+      - 아래 파일 확인
+
+        ```
+        # 인증서
+        - /etc/letsencrypt/live/도메인/privkey.pem
+
+        # 개인키
+        - /etc/letsencrypt/live/도메인/fullchain.pem
+        ```
+
+4. **원격 서버 - 인증서 파일 권한 변경**
+
+   ```bash
+   sudo chmod 644 /etc/letsencrypt/live/도메인/privkey.pem
+   sudo chmod 644 /etc/letsencrypt/live/도메인/fullchain.pem
+   ```
+
+### 2. Nginx 인증서 설정
+
+- **생성한 인증서를 Nginx 서비스에 제공**
+
+  - `docker-compose.yml` 과 `nginx.conf` 파일 수정
+
+- `docker-compose.yml`
 
   ```yaml
-  name: deploy service
+  services:
+    db:
+      container_name: db-container
+      image: mysql:8.0
+      volumes:
+        - db-volume:/var/lib/mysql
+      env_file:
+        - .env
+      networks:
+        - db-connect
+      healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+        interval: 10s
+        timeout: 5s
+        retries: 3
+        start_period: 30s
 
-  on:
-    push:
-      branches:
-        - main
+    backend:
+      container_name: backend-container
+      build:
+        context: ./backend
+      image: nodecrewbeemo/backend:latest
+      env_file:
+        - .env
+      environment:
+        DATABASE_HOST: db
+      networks:
+        - db-connect
+        - backend-connect
+      depends_on:
+        db:
+          condition: service_healthy
 
-  jobs:
-    ssh-agent: # Job 이름
-      runs-on: ubuntu-24.04 # GitHub 워크스페이스 환경
+    frontend:
+      container_name: frontend-container
+      build:
+        context: ./frontend
+        args:
+          VITE_API_URL: ${VITE_API_URL}
+      image: nodecrewbeemo/frontend:latest
+      # 도메인 이름 관리
+      environment:
+        - DOMAIN=도메인
+      ports:
+        - "80:80"
+        # HTTPS 통신 위한 443 포트 매핑
+        - "443:443"
+      networks:
+        - backend-connect
+      # volume 블록으로 SSL 인증서 컨테이너와 공유
+  		volumes:
+  		  - /etc/letsencrypt/live/${DOMAIN}/fullchain.pem:/etc/letsencrypt/live/${DOMAIN}/fullchain.pem:ro
+  		  - /etc/letsencrypt/live/${DOMAIN}/privkey.pem:/etc/letsencrypt/live/${DOMAIN}/privkey.pem:ro
+      depends_on:
+        - backend
+        - db
 
-      steps: # 실행할 작업(step)
-        - name: Checkout code
-          uses: actions/checkout@v4
+  volumes:
+    db-volume:
 
-        - name: Create .env file
-          run: |
-            echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env
-            echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
-            echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
-            echo "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" >> .env
-            echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> .env
-            echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
-            echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+  networks:
+    db-connect:
+    backend-connect:
+  ```
 
-        - name: Add Remote Server Fingerprint to Known Hosts
-          run: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts || true
+- `nginx.conf`
 
-        - name: Login DockerHub
-          run: echo '${{ secrets.DOCKER_PASSWORD}}' | docker login -u '${{ secrets.DOCKER_USERNAME }}' --password-stdin
+  ```groovy
+  worker_processes 1;
 
-        - name: Docker Image Build
-          run: docker compose -f docker-compose.yml build
+  events {
+      worker_connections 1024;
+  }
 
-        - name: Docker Image Push
-          run: docker compose -f docker-compose.yml push
+  http {
+      include       mime.types;
+      default_type  application/json;
 
-        - name: Copy .env / docker-compose.yml
-          uses: appleboy/scp-action@v0.1.7
-          with:
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USERNAME }}
-            key: ${{ secrets.SSH_PRIVATE_KEY }}
-            port: ${{ secrets.SSH_PORT }}
-            source: "docker-compose.yml,.env"
-            target: "~/github-actions-work-directory"
+      log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                  '$status $body_bytes_sent "$http_referer" '
+                  '"$http_user_agent" "$http_x_forwarded_for" '
+                  'to "$upstream_addr"';
 
-        - name: Pull Image & Up Container
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USERNAME }}
-            key: ${{ secrets.SSH_PRIVATE_KEY }}
-            port: ${{ secrets.SSH_PORT }}
-            script: |
-              cd ~/github-actions-work-directory
-              docker compose -f docker-compose.yml pull
-              docker compose -f docker-compose.yml down
-              docker compose -f docker-compose.yml up -d
+      access_log /var/log/nginx/access.log main;
+      error_log /var/log/nginx/error.log debug;
+
+      gzip_static on;
+      gzip_vary on;
+
+      # HTTPS 서버 설정
+      server {
+          listen 443 ssl http2;
+          server_name 도메인;
+
+          # SSL 인증 설정
+          # SSL 인증서 경로
+          ssl_certificate /etc/letsencrypt/live/도메인/fullchain.pem;
+          # 개인키 경로
+          ssl_certificate_key /etc/letsencrypt/live/도메인/privkey.pem;
+
+          # SSL 보안 설정
+          # SSL 버전
+          ssl_protocols TLSv1.2 TLSv1.3;
+          # 핸드셰이크 중 암호화 알고리즘 목록
+          ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+          # 암호화 알고리즘을 클라이언트 / 서버 둘 다 선택 가능
+          # 아래는 암호화 알고리즘 선택권을 서버에게 우선권을 부여하겠다는 의미
+          ssl_prefer_server_ciphers on;
+
+          root /usr/share/nginx/html;
+          index index.html;
+
+          location / {
+              try_files $uri /index.html;
+          }
+
+          location /api/ {
+              proxy_pass http://backend-container:8080;
+              proxy_set_header Host $host;
+          }
+      }
+
+      # HTTP를 HTTPS로 리다이렉트
+      server {
+          listen 80;
+          server_name 도메인;
+
+          location / {
+  		        # 동일한 호스트와 URI로 리다이렉트
+              return 301 https://$host$request_uri;
+          }
+      }
+  }
+  ```
+
+### 3. Nginx 설정 파일 - \*.template
+
+- **Nginx 환경 변수 주입**
+  > **폴더 경로**
+  >
+  > - **📁 .github**
+  >   - 📁 workflows
+  >     - `*workflows.yml*`
+  > - **📁 api**
+  >   - `*.env*`
+  >   - `*Dockerfile*`
+  > - **📁 client**
+  >   - `*Dockerfile*`
+  >   - `*nginx.conf*`
+  >   - 📁 templates
+  >     - `*default.conf.template*`
+  >     - `*https.conf.template*`
+  > - **`*.env*`**
+  > - **`*docker-compose.yml*`**
+- **`*nginx.conf`\* 에서 HTTP 서버 설정 분리**
+
+  ```groovy
+  worker_processes 1;
+
+  events {
+  worker_connections 1024;
+  }
+
+  http {
+  include       mime.types;
+  default_type  application/json;
+
+  log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+  '$status $body_bytes_sent "$http_referer" '
+  '"$http_user_agent" "$http_x_forwarded_for" '
+  'to "$upstream_addr"';
+
+  access_log /var/log/nginx/access.log main;
+  error_log /var/log/nginx/error.log debug;
+
+  keepalive_timeout 60;
+
+  gzip_static on;
+  gzip_vary on;
+
+  include /etc/nginx/conf.d/*.conf;
+  }
+  ```
+
+- **`*default.conf.template` -\* 기존 HTTP(80) 서버 설정 작성**
+
+  ```groovy
+  # HTTP를 HTTPS로 리다이렉트
+  server {
+  listen 80;
+  server_name ${DOMAIN};
+
+  location / {
+  return 301 https://$host$request_uri;
+  }
+  }
+  ```
+
+- **`*https.conf.template`\* - 기존 HTTPS(443) 서버 설정 작성**
+
+  ```groovy
+  # HTTPS 서버 설정
+  server {
+  listen 443 ssl http2;
+  server_name ${DOMAIN};
+
+  ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_prefer_server_ciphers on;
+  ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+
+  root /usr/share/nginx/html;
+  index index.html;
+
+  location / {
+  try_files $uri /index.html;
+  }
+
+  location /api/ {
+  proxy_pass ${API_URL};
+  proxy_http_version 1.1;
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+  }
+  }
+  ```
+
+- **`*client/Dockerfile` - `templates`\* 폴더 파일 COPY 구문 추가**
+
+  ```jsx
+  FROM node:23-alpine AS build
+  ARG VITE_API_URL
+  ENV VITE_API_URL=$VITE_API_URL
+  WORKDIR /app
+  COPY package*.json ./
+  RUN npm install
+  COPY . .
+  RUN npm run build
+
+  FROM nginx:mainline-alpine-slim
+  COPY --from=build /app/dist /usr/share/nginx/html
+  COPY nginx.conf /etc/nginx/nginx.conf
+  COPY ./templates /etc/nginx/templates
+  EXPOSE 80 443
+  CMD ["nginx", "-g", "daemon off;"]
+  ```
+
+- **`*docker-compose.yml`\* - Client에서 환경 변수 불러옴**
+
+  ```yaml
+  services:
+  	frontend:
+  		# ...
+  		env_file:
+  		- .env
+  ```
+
+- `*.env`\* 환경변수 파일
+  ```
+  DOMAIN=도메인명
+  API_URL=http://backend-container:8080
+  ```
+- `*workflows.yml*`
+  - GitHub Actions 사용할 경우 환경 변수 추가
+  ```
+  echo "DOMAIN=${{ secrets.DOMAIN }}" >> .env
+  echo "API_URL=${{ secrets.API_URL }}" >> .env
   ```
