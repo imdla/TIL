@@ -23,7 +23,7 @@
 - **서버 측**
   1. **Access-Control-Allow-Origin 헤더 설정**
      - 특정 출처에서의 접근 허용 가능
-     - ex. `Access-Control-Allw-Origin: *` : 모든 출처에 대한 허용
+     - ex. `Access-Control-Allow-Origin: *` : 모든 출처에 대한 허용
   2. **Access-Control-Allow-Methods, Access-Control-Allow-Headers 헤더 설정**
      - HTTP 메소드나 특정 헤더 허용 가능
   - 서버에서 수행되는 동작
