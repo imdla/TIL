@@ -18,13 +18,13 @@
 
 - **포화 이진 트리**
   - 마지막 레벨까지 모든 정점이 채워져 있는 경우
-    ![포화 이진 트리](/assets/Binary_Tree_1.png)
+    ![포화 이진 트리](/ComputerScience/assets/Binary_Tree_1.png)
 - **완전 이진 트리**
   - 마지막 레벨을 제외하고 모든 정점이 채워져 있는 경우
-    ![완전 이진 트리](/assets/Binary_Tree_2.png)
+    ![완전 이진 트리](/ComputerScience/assets/Binary_Tree_2.png)
 - **편향 이진 트리**
   - 한 방향으로만 이어지는 경우
-    ![편향 이진 트리](/assets/Binary_Tree_3.png)
+    ![편향 이진 트리](/ComputerScience/assets/Binary_Tree_3.png)
 
 > **이진 트리의 특징과 활용**
 
